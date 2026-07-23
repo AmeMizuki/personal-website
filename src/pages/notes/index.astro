@@ -1,0 +1,127 @@
+---
+import { getCollection, render } from 'astro:content'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import { profile } from '@/data/profile'
+
+const notes = (await getCollection('notes')).sort((a, b) => b.data.date - a.data.date)
+const rendered = await Promise.all(notes.map((note) => render(note)))
+---
+
+<BaseLayout title="~/notes">
+  <div class="notes">
+    <div class="notes__pane term-pane">
+      <p class="notes__prompt reveal" style="--i: 0">
+        {profile.handle}@{profile.hostname}:~$ tail -f ~/notes.log
+      </p>
+
+      <ul class="notes__list">
+        {
+          notes.map((note, i) => {
+            const { Content } = rendered[i]
+            return (
+              <li class="notes__row reveal" style={`--i: ${i + 1}`}>
+                <span class="notes__date">{note.data.date.toISOString().slice(0, 10)}</span>
+                <div class="notes__body">
+                  <Content />
+                </div>
+              </li>
+            )
+          })
+        }
+      </ul>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .notes {
+    padding: clamp(var(--space-lg), 5vw, var(--space-2xl)) clamp(var(--space-md), 4vw, var(--space-xl));
+    display: flex;
+    justify-content: center;
+  }
+
+  .notes__pane {
+    width: 100%;
+    max-width: 42rem;
+    padding: clamp(var(--space-lg), 4vw, var(--space-xl));
+  }
+
+  .notes__prompt {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    margin: 0 0 var(--space-lg);
+  }
+
+  .notes__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-rule);
+  }
+
+  .notes__row {
+    display: flex;
+    gap: var(--space-md);
+    padding-block: var(--space-md);
+    border-bottom: 1px solid var(--color-rule);
+  }
+
+  .notes__date {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    padding-top: 0.2em;
+  }
+
+  .notes__body {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    color: var(--color-ink);
+    min-width: 0;
+  }
+
+  .notes__body :global(p) {
+    margin: 0 0 var(--space-sm);
+  }
+
+  .notes__body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  .notes__body :global(a) {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--color-rule);
+    text-underline-offset: 3px;
+  }
+
+  .notes__body :global(a:hover) {
+    color: var(--color-accent);
+    text-decoration-color: currentColor;
+  }
+
+  .notes__body :global(img) {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: min(100%, 20rem);
+    max-height: 20rem;
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .notes__body :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--color-paper-2);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius);
+    padding: 0.1em 0.4em;
+  }
+</style>

@@ -1,0 +1,93 @@
+---
+import { ClientRouter } from 'astro:transitions'
+import '@/styles/global.css'
+import SiteBackground from '@/components/SiteBackground.vue'
+import TerminalNav from '@/components/TerminalNav.vue'
+import SiteFooter from '@/components/SiteFooter.vue'
+import { profile } from '@/data/profile'
+
+const { title = '~/terminal' } = Astro.props
+const currentPath = Astro.url.pathname
+---
+
+<!doctype html>
+<html lang="zh-Hant" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <title>{title}</title>
+    <ClientRouter />
+  </head>
+  <body>
+    <div id="preloader" class="preloader" transition:persist aria-hidden="true">
+      <p class="preloader__title">
+        {profile.name}<span class="preloader__cursor">▮</span>
+      </p>
+    </div>
+    <SiteBackground client:visible transition:persist />
+    <TerminalNav client:visible transition:persist currentPath={currentPath} />
+    <main class="site-main" transition:animate="fade">
+      <slot />
+    </main>
+    <SiteFooter client:visible transition:persist />
+  </body>
+</html>
+
+<script>
+  const preloader = document.getElementById('preloader')
+  function reveal() {
+    preloader?.classList.add('is-hidden')
+  }
+  if (document.readyState === 'complete') {
+    reveal()
+  } else {
+    window.addEventListener('load', reveal, { once: true })
+  }
+</script>
+
+<style>
+  .site-main {
+    position: relative;
+    z-index: var(--z-raised);
+    min-height: calc(100dvh - 3.5rem);
+    padding-block-start: 3.5rem;
+  }
+
+  .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-tooltip);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-paper);
+    transition: opacity var(--dur-long) var(--ease-out);
+  }
+
+  .preloader.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .preloader__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-display);
+    color: var(--color-ink);
+    overflow-wrap: anywhere;
+  }
+
+  .preloader__cursor {
+    color: var(--color-cursor);
+    animation: preloader-blink 1s step-end infinite;
+  }
+
+  @keyframes preloader-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+</style>

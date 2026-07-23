@@ -1,0 +1,60 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import { profile } from '@/data/profile'
+---
+
+<BaseLayout title="~/404">
+  <div class="not-found">
+    <div class="not-found__pane term-pane">
+      <p class="not-found__prompt reveal" style="--i: 0">
+        {profile.handle}@{profile.hostname}:~$ cd {Astro.url.pathname}
+      </p>
+      <p class="not-found__error reveal" style="--i: 1">
+        bash: cd: {Astro.url.pathname}: No such file or directory
+      </p>
+      <a href="/" class="not-found__back reveal" style="--i: 2">← cd ~</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .not-found {
+    min-height: calc(100dvh - 3.5rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(var(--space-lg), 5vw, var(--space-2xl)) clamp(var(--space-md), 4vw, var(--space-xl));
+  }
+
+  .not-found__pane {
+    width: 100%;
+    max-width: 34rem;
+    padding: clamp(var(--space-lg), 4vw, var(--space-xl));
+  }
+
+  .not-found__prompt {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .not-found__error {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    color: var(--color-ink);
+    margin: 0 0 var(--space-xl);
+  }
+
+  .not-found__back {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color var(--dur-short) var(--ease-out);
+  }
+
+  .not-found__back:hover {
+    color: var(--color-accent);
+  }
+</style>

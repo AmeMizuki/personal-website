@@ -1,0 +1,266 @@
+---
+import { getCollection } from 'astro:content'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import { profile } from '@/data/profile'
+
+const entries = (await getCollection('journal')).sort((a, b) => b.data.date - a.data.date)
+const categories = [...new Set(entries.map((entry) => entry.data.category))]
+---
+
+<BaseLayout title="~/journal">
+  <div class="journal">
+    <div class="journal__pane term-pane">
+      <p class="journal__prompt reveal" style="--i: 0">
+        {profile.handle}@{profile.hostname}:~$ ls -la ~/journal
+      </p>
+
+      <div class="journal__controls reveal" style="--i: 1">
+        <input
+          type="search"
+          id="journal-search"
+          class="journal__search"
+          placeholder="grep ..."
+          aria-label="搜尋日記"
+        />
+        <div class="journal__cats" id="journal-cats">
+          <button type="button" class="journal__cat is-active" data-category="all">all</button>
+          {
+            categories.map((category) => (
+              <button type="button" class="journal__cat" data-category={category}>
+                {category}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <ul class="journal__list" id="journal-list">
+        {
+          entries.map((entry, i) => (
+            <li
+              class="journal__row reveal"
+              style={`--i: ${i + 2}`}
+              data-category={entry.data.category}
+              data-search={`${entry.data.title} ${entry.data.excerpt}`.toLowerCase()}
+            >
+              <a href={`/journal/${entry.id}`} class="journal__link">
+                <span class="journal__perms">-rw-r--r--</span>
+                <span class="journal__date">{entry.data.date.toISOString().slice(0, 10)}</span>
+                <span class="journal__body">
+                  <span class="journal__title">{entry.data.title}</span>
+                  <span class="journal__category">[{entry.data.category}]</span>
+                  <span class="journal__excerpt">{entry.data.excerpt}</span>
+                </span>
+                <span class="journal__arrow">→</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="journal__empty" id="journal-empty" hidden>找不到符合的日記。</p>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  // Astro's view-transition router swaps this page's DOM on client-side nav without
+  // re-running a plain top-level script against the new nodes — rebind on every load.
+  function setup() {
+    const searchInput = document.getElementById('journal-search') as HTMLInputElement | null
+    const catButtons = document.querySelectorAll<HTMLButtonElement>('#journal-cats .journal__cat')
+    const rows = document.querySelectorAll<HTMLLIElement>('#journal-list .journal__row')
+    const emptyMsg = document.getElementById('journal-empty') as HTMLParagraphElement | null
+    if (!searchInput || !emptyMsg) return
+
+    let activeCategory = 'all'
+
+    function applyFilter() {
+      const query = searchInput!.value.trim().toLowerCase()
+      let visibleCount = 0
+
+      rows.forEach((row) => {
+        const matchesCategory = activeCategory === 'all' || row.dataset.category === activeCategory
+        const matchesQuery = !query || (row.dataset.search ?? '').includes(query)
+        const visible = matchesCategory && matchesQuery
+        row.hidden = !visible
+        if (visible) visibleCount += 1
+      })
+
+      emptyMsg!.hidden = visibleCount > 0
+    }
+
+    searchInput.addEventListener('input', applyFilter)
+
+    catButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        activeCategory = button.dataset.category ?? 'all'
+        catButtons.forEach((b) => b.classList.toggle('is-active', b === button))
+        applyFilter()
+      })
+    })
+  }
+
+  document.addEventListener('astro:page-load', setup)
+</script>
+
+<style>
+  .journal {
+    padding: clamp(var(--space-lg), 5vw, var(--space-2xl)) clamp(var(--space-md), 4vw, var(--space-xl));
+    display: flex;
+    justify-content: center;
+  }
+
+  .journal__pane {
+    width: 100%;
+    max-width: 48rem;
+    padding: clamp(var(--space-lg), 4vw, var(--space-xl));
+  }
+
+  .journal__prompt {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    margin: 0 0 var(--space-lg);
+  }
+
+  .journal__controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin: 0 0 var(--space-lg);
+  }
+
+  .journal__search {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+    background: var(--color-paper-2);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius);
+    padding: var(--space-2xs) var(--space-sm);
+    outline: none;
+    transition: border-color var(--dur-short) var(--ease-out);
+  }
+
+  .journal__search:focus {
+    border-color: var(--color-accent);
+  }
+
+  .journal__cats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .journal__cat {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+    background: transparent;
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius);
+    padding: var(--space-3xs) var(--space-xs);
+    cursor: pointer;
+    transition:
+      color var(--dur-short) var(--ease-out),
+      border-color var(--dur-short) var(--ease-out);
+  }
+
+  .journal__cat:hover {
+    color: var(--color-ink);
+  }
+
+  .journal__cat.is-active {
+    color: var(--color-ink);
+    border-color: var(--color-ink);
+  }
+
+  .journal__empty {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    padding-block: var(--space-md);
+  }
+
+  .journal__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-rule);
+  }
+
+  .journal__row {
+    border-bottom: 1px solid var(--color-rule);
+  }
+
+  .journal__link {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-md);
+    padding-block: var(--space-md);
+    text-decoration: none;
+    color: var(--color-ink);
+    transition: color var(--dur-short) var(--ease-out);
+  }
+
+  .journal__link:hover {
+    color: var(--color-accent);
+  }
+
+  .journal__link:hover .journal__title {
+    text-decoration: underline;
+    text-decoration-color: var(--color-rule);
+  }
+
+  .journal__perms {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+    display: none;
+  }
+
+  .journal__date {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .journal__body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+  }
+
+  .journal__title {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    font-weight: 700;
+  }
+
+  .journal__category {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+  }
+
+  .journal__excerpt {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-ink-2);
+  }
+
+  .journal__arrow {
+    color: var(--color-muted);
+  }
+
+  @media (min-width: 40rem) {
+    .journal__perms {
+      display: inline;
+    }
+  }
+</style>

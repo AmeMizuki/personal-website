@@ -1,0 +1,143 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import { profile } from '@/data/profile'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
+---
+
+<BaseLayout title="~/about">
+  <div class="about">
+    <div class="about__pane term-pane">
+      <p class="about__prompt reveal" style="--i: 0">
+        {profile.handle}@{profile.hostname}:~$ cat about.txt
+      </p>
+
+      <section class="about__section reveal" style="--i: 1">
+        <h2 class="about__heading"># whoami</h2>
+        {profile.bioLines.map((line) => <p class="about__paragraph">{line}</p>)}
+      </section>
+
+      <Separator class="about__rule" />
+
+      <section class="about__section reveal" style="--i: 2">
+        <h2 class="about__heading"># stack</h2>
+        <div class="about__skills">
+          {
+            profile.skills.map((skill) => (
+              <Badge variant="outline" class="about__skill">
+                {skill}
+              </Badge>
+            ))
+          }
+        </div>
+      </section>
+
+      <Separator class="about__rule" />
+
+      <section class="about__section reveal" style="--i: 3">
+        <h2 class="about__heading"># now</h2>
+        <p class="about__paragraph">{profile.now}</p>
+      </section>
+
+      <Separator class="about__rule" />
+
+      <section class="about__section reveal" style="--i: 4">
+        <h2 class="about__heading"># links</h2>
+        <ul class="about__links">
+          {
+            profile.links.map((link) => (
+              <li>
+                <a href={link.href} class="about__link" target="_blank" rel="noopener">
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .about {
+    padding: clamp(var(--space-lg), 5vw, var(--space-2xl)) clamp(var(--space-md), 4vw, var(--space-xl));
+    display: flex;
+    justify-content: center;
+  }
+
+  .about__pane {
+    width: 100%;
+    max-width: 42rem;
+    padding: clamp(var(--space-lg), 4vw, var(--space-xl));
+  }
+
+  .about__prompt {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    margin: 0 0 var(--space-xl);
+  }
+
+  .about__section {
+    margin-block: var(--space-lg);
+  }
+
+  .about__heading {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-ink-2);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .about__paragraph {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    line-height: 1.65;
+    color: var(--color-ink);
+    max-width: 60ch;
+    margin: 0 0 var(--space-xs);
+  }
+
+  .about__skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .about__skills :global(.about__skill) {
+    font-family: var(--font-mono);
+    border-radius: var(--radius);
+  }
+
+  .about__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+  }
+
+  .about__link {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--color-rule);
+    text-underline-offset: 3px;
+    transition:
+      color var(--dur-short) var(--ease-out),
+      text-decoration-color var(--dur-short) var(--ease-out);
+  }
+
+  .about__link:hover {
+    color: var(--color-accent);
+    text-decoration-color: currentColor;
+  }
+
+  .about :global(.about__rule) {
+    background: var(--color-rule);
+  }
+</style>

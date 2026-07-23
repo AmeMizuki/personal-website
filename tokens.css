@@ -1,0 +1,97 @@
+/* Hallmark · route: custom (bespoke) · structure: terminal session shell (fixed full-viewport ASCII-eye canvas + command-line nav + per-route content pane)
+ * idea: "the site is a terminal you are logged into, watched by a living ASCII eye that tracks your cursor and blinks on its own clock"
+ * paper: oklch(97% 0.006 240) [light] / oklch(14% 0.006 240) [dark] · accent: oklch(10% 0.010 240) [light] / oklch(97% 0.012 240) [dark]
+ * display: JetBrains Mono · body: JetBrains Mono (single-family — terminal aesthetic IS the design; typography.md line 7 exception)
+ * axes: dark / mono / neutral · gates: all-pass · studied: no · context: explicit · v0.9.x
+ */
+
+:root {
+  /* ---- colour: light mode (near-white paper, near-black ink, hue 240 cool tint held constant across modes) ---- */
+  --color-paper: oklch(97% 0.006 240);
+  --color-paper-2: oklch(93% 0.007 240);
+  --color-paper-3: oklch(89% 0.008 240);
+  --color-ink: oklch(16% 0.008 240);
+  --color-ink-2: oklch(38% 0.008 240);
+  --color-rule: oklch(78% 0.010 240);
+  --color-rule-2: oklch(84% 0.009 240);
+  --color-muted: oklch(48% 0.008 240);
+  --color-accent: oklch(10% 0.010 240);
+  --color-accent-ink: oklch(97% 0.006 240);
+  --color-focus: oklch(10% 0.02 240);
+  --color-cursor: oklch(10% 0.010 240);
+
+  /* ---- type: single family, terminal aesthetic ---- */
+  --font-display: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-body: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --text-xs: 0.64rem;
+  --text-sm: 0.8rem;
+  --text-base: 1rem;
+  --text-md: 1.25rem;
+  --text-lg: 1.5625rem;
+  --text-xl: 1.9531rem;
+  --text-2xl: 2.4414rem;
+  --text-3xl: 3.0518rem;
+  --text-4xl: 3.8147rem;
+  --text-display: clamp(2.75rem, 5vw + 1rem, 5.25rem);
+  --text-display-s: clamp(2rem, 3.5vw + 1rem, 3.5rem);
+
+  /* ---- space: 4pt scale ---- */
+  --space-3xs: 0.125rem;
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --space-4xl: 9rem;
+
+  /* ---- motion ---- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+
+  /* ---- radius: barely-there, reads square ---- */
+  --radius: 0.125rem;
+
+  /* ---- z-index ---- */
+  --z-base: 1;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+}
+
+.dark {
+  /* ---- colour: dark mode (near-black paper, near-white ink; same hue 240 anchor, only L/C move) ---- */
+  --color-paper: oklch(14% 0.006 240);
+  --color-paper-2: oklch(18% 0.007 240);
+  --color-paper-3: oklch(22% 0.008 240);
+  --color-ink: oklch(94% 0.006 240);
+  --color-ink-2: oklch(66% 0.008 240);
+  --color-rule: oklch(32% 0.010 240);
+  --color-rule-2: oklch(26% 0.009 240);
+  --color-muted: oklch(52% 0.008 240);
+  --color-accent: oklch(97% 0.012 240);
+  --color-accent-ink: oklch(14% 0.006 240);
+  --color-focus: oklch(97% 0.02 240);
+  --color-cursor: oklch(97% 0.012 240);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 150ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 150ms !important;
+  }
+}

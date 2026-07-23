@@ -1,0 +1,180 @@
+---
+import { getCollection, render } from 'astro:content'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import { profile } from '@/data/profile'
+
+export async function getStaticPaths() {
+  const entries = await getCollection('journal')
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }))
+}
+
+const { entry } = Astro.props
+const { Content } = await render(entry)
+---
+
+<BaseLayout title={`~/journal/${entry.id}`}>
+  <div class="entry">
+    <div class="entry__pane term-pane">
+      <p class="entry__prompt reveal" style="--i: 0">
+        {profile.handle}@{profile.hostname}:~$ cat ~/journal/{entry.id}.md
+      </p>
+      <h1 class="entry__title reveal" style="--i: 1">{entry.data.title}</h1>
+      <p class="entry__date reveal" style="--i: 2">{entry.data.date.toISOString().slice(0, 10)}</p>
+      <div class="entry__body reveal" style="--i: 3">
+        <Content />
+      </div>
+
+      <a href="/journal" class="entry__back">← cd ..</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .entry {
+    padding: clamp(var(--space-lg), 5vw, var(--space-2xl)) clamp(var(--space-md), 4vw, var(--space-xl));
+    display: flex;
+    justify-content: center;
+  }
+
+  .entry__pane {
+    width: 100%;
+    max-width: 42rem;
+    padding: clamp(var(--space-lg), 4vw, var(--space-xl));
+  }
+
+  .entry__prompt {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    margin: 0 0 var(--space-lg);
+  }
+
+  .entry__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--text-2xl);
+    color: var(--color-ink);
+    margin: 0 0 var(--space-2xs);
+    overflow-wrap: anywhere;
+  }
+
+  .entry__date {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+    font-variant-numeric: tabular-nums;
+    margin: 0 0 var(--space-xl);
+  }
+
+  .entry__body {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    line-height: 1.65;
+    color: var(--color-ink);
+    max-width: 65ch;
+    margin-bottom: var(--space-xl);
+  }
+
+  .entry__body :global(p) {
+    margin: 0 0 var(--space-md);
+  }
+
+  .entry__body :global(h2),
+  .entry__body :global(h3) {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--color-ink);
+    margin: var(--space-lg) 0 var(--space-sm);
+  }
+
+  .entry__body :global(ul),
+  .entry__body :global(ol) {
+    margin: 0 0 var(--space-md);
+    padding-inline-start: 1.25em;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+
+  .entry__body :global(a) {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--color-rule);
+    text-underline-offset: 3px;
+    transition:
+      color var(--dur-short) var(--ease-out),
+      text-decoration-color var(--dur-short) var(--ease-out);
+  }
+
+  .entry__body :global(a:hover) {
+    color: var(--color-accent);
+    text-decoration-color: currentColor;
+  }
+
+  .entry__body :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--color-paper-2);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius);
+    padding: 0.1em 0.4em;
+  }
+
+  .entry__body :global(pre) {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius);
+    padding: var(--space-md);
+    overflow-x: auto;
+    margin: 0 0 var(--space-md);
+    /* Astro's markdown pipeline ships Shiki syntax highlighting as inline styles (its own
+       fixed colour theme) on <pre> and every token <span> — overriding here keeps code
+       blocks strictly monochrome instead of importing an unrelated colour palette. */
+    background: var(--color-paper-2) !important;
+    color: var(--color-ink) !important;
+  }
+
+  .entry__body :global(pre) :global(span) {
+    color: inherit !important;
+  }
+
+  .entry__body :global(pre code) {
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .entry__body :global(img) {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: min(100%, 40rem);
+    max-height: 40rem;
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius);
+    margin: 0 0 var(--space-md);
+  }
+
+  .entry__body :global(blockquote) {
+    margin: 0 0 var(--space-md);
+    padding-inline-start: var(--space-md);
+    border-inline-start: 2px solid var(--color-rule);
+    color: var(--color-ink-2);
+  }
+
+  .entry__back {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    text-decoration: none;
+    transition: color var(--dur-short) var(--ease-out);
+  }
+
+  .entry__back:hover {
+    color: var(--color-accent);
+  }
+</style>
