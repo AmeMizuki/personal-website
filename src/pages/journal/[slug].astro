@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
+import Breadcrumb from '@/components/Breadcrumb.astro'
 import { profile } from '@/data/profile'
 
 export async function getStaticPaths() {
@@ -18,6 +19,10 @@ const { Content } = await render(entry)
 <BaseLayout title={`~/journal/${entry.id}`}>
   <div class="entry">
     <div class="entry__pane term-pane">
+      <Breadcrumb
+        items={[{ label: '~', href: '/' }, { label: 'journal', href: '/journal' }, { label: entry.data.title }]}
+      />
+
       <p class="entry__prompt reveal" style="--i: 0">
         {profile.handle}@{profile.hostname}:~$ cat ~/journal/{entry.id}.md
       </p>

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
+import Breadcrumb from '@/components/Breadcrumb.astro'
 import { profile } from '@/data/profile'
 
 const entries = (await getCollection('journal')).sort((a, b) => b.data.date - a.data.date)
@@ -10,6 +11,8 @@ const categories = [...new Set(entries.map((entry) => entry.data.category))]
 <BaseLayout title="~/journal">
   <div class="journal">
     <div class="journal__pane term-pane">
+      <Breadcrumb items={[{ label: '~', href: '/' }, { label: 'journal' }]} />
+
       <p class="journal__prompt reveal" style="--i: 0">
         {profile.handle}@{profile.hostname}:~$ ls -la ~/journal
       </p>
