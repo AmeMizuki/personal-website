@@ -2,18 +2,23 @@
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue'
 import { profile } from '@/data/profile'
 import DecryptedText from '@/components/DecryptedText/DecryptedText.vue'
+import MusicPlayerSkin from '@/components/MusicPlayerSkin.vue'
+import { initPlayer } from '@/composables/musicPlayerStore'
+
+const MUSIC_VIDEO_ID = 'acnx9QFbAp4'
 
 const props = defineProps({
   currentPath: { type: String, default: '/' },
 })
 
-// This island is persisted across Astro view transitions (transition:persist), so its props
-// won't refresh on soft navigation — resync from the URL after each page swap.
 const currentPath = ref(props.currentPath)
 function syncPath() {
   currentPath.value = window.location.pathname
 }
-onMounted(() => document.addEventListener('astro:page-load', syncPath))
+onMounted(() => {
+  document.addEventListener('astro:page-load', syncPath)
+  initPlayer(MUSIC_VIDEO_ID)
+})
 onBeforeUnmount(() => document.removeEventListener('astro:page-load', syncPath))
 
 const links = [
@@ -53,6 +58,14 @@ function isActive(to) {
           </a>
         </li>
       </ul>
+
+      <MusicPlayerSkin
+        compact
+        class="term-nav__player"
+        album="TIE HUA FEI / 鐵花飛"
+        artist="Mili"
+        cover="https://img.youtube.com/vi/acnx9QFbAp4/hqdefault.jpg"
+      />
     </div>
   </nav>
 </template>
@@ -147,6 +160,10 @@ function isActive(to) {
 
 .term-nav__link-verb {
   color: var(--color-muted);
+}
+
+.term-nav__player {
+  flex-shrink: 0;
 }
 
 @media (max-width: 40rem) {

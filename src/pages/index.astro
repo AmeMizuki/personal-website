@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import TextType from '@/components/TextType/TextType.vue'
-import MusicPlayer from '@/components/MusicPlayer.vue'
+import MusicPlayerSkin from '@/components/MusicPlayerSkin.vue'
 import { Button } from '@/components/ui/button'
 import { profile } from '@/data/profile'
 
@@ -13,7 +13,7 @@ const bootLines = [
   'ready.',
 ]
 
-const latest = (await getCollection('journal')).sort((a, b) => b.data.date - a.data.date).slice(0, 2)
+const latest = (await getCollection('journal')).sort((a, b) => b.data.date - a.data.date).slice(0, 3)
 ---
 
 <BaseLayout title="~/home">
@@ -57,17 +57,16 @@ const latest = (await getCollection('journal')).sort((a, b) => b.data.date - a.d
 
     <section class="home-player">
       <h2 class="home-player__heading"># now_playing</h2>
-      <MusicPlayer
+      <MusicPlayerSkin
         client:visible
-        album="Terminal Sessions"
-        artist="The Faulty Terminal"
-        cover="https://picsum.photos/id/1025/200/200"
-        src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+        album="TIE HUA FEI / 鐵花飛"
+        artist="Mili"
+        cover="https://img.youtube.com/vi/acnx9QFbAp4/hqdefault.jpg"
       />
     </section>
 
     <section class="home-latest">
-      <h2 class="home-latest__heading"># tail -n 2 ~/journal</h2>
+      <h2 class="home-latest__heading"># tail -n 3 ~/journal</h2>
       <ul class="home-latest__list">
         {
           latest.map((entry) => (

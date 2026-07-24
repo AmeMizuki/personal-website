@@ -49,6 +49,7 @@
   }
   html {
     overflow-x: clip;
+    scrollbar-color: var(--color-rule) var(--color-paper);
   }
   body {
     @apply bg-background text-foreground;
@@ -58,6 +59,20 @@
   ::selection {
     background: var(--color-ink);
     color: var(--color-paper);
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-paper);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-rule);
+    border-radius: var(--radius);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-muted);
   }
 }
 

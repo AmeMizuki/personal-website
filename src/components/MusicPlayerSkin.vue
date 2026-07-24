@@ -1,175 +1,49 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
 import { Play, Pause, Rewind, FastForward, Volume2, VolumeX } from '@lucide/vue'
+import {
+  isPlaying,
+  currentTime,
+  duration,
+  controlsDisabled,
+  dataState,
+  statusText,
+  progressPercent,
+  volume,
+  muted,
+  togglePlay,
+  onSeek,
+  toggleMute,
+  onVolumeInput,
+  skip,
+  formatTime,
+} from '@/composables/musicPlayerStore'
 
-const VOLUME_STORAGE_KEY = 'music-player-volume'
-
-const props = defineProps({
+defineProps({
   album: { type: String, required: true },
   artist: { type: String, required: true },
   cover: { type: String, required: true },
-  src: { type: String, required: true },
+  compact: { type: Boolean, default: false },
 })
-
-const audioEl = ref(null)
-
-const isPlaying = ref(false)
-const currentTime = ref(0)
-const duration = ref(0)
-const ready = ref(false)
-const buffering = ref(false)
-const hasError = ref(false)
-const justRecovered = ref(false)
-const volume = ref(70)
-const muted = ref(true)
-let recoverTimer = null
-
-function loadStoredVolume() {
-  const stored = Number(localStorage.getItem(VOLUME_STORAGE_KEY))
-  return Number.isFinite(stored) && stored >= 0 && stored <= 100 ? stored : 70
-}
-
-const controlsDisabled = computed(() => !ready.value || hasError.value)
-
-const dataState = computed(() => {
-  if (hasError.value) return 'error'
-  if (justRecovered.value) return 'success'
-  if (!ready.value || buffering.value) return 'loading'
-  return 'ready'
-})
-
-const statusText = computed(() => {
-  if (hasError.value) return '音樂載入失敗'
-  if (!ready.value) return '音樂載入中'
-  if (buffering.value) return '緩衝中'
-  return '就緒'
-})
-
-const progressPercent = computed(() => (duration.value ? (currentTime.value / duration.value) * 100 : 0))
-
-function flagRecovered() {
-  hasError.value = false
-  justRecovered.value = true
-  clearTimeout(recoverTimer)
-  recoverTimer = setTimeout(() => {
-    justRecovered.value = false
-  }, 600)
-}
-
-function onLoadedMetadata() {
-  duration.value = audioEl.value.duration
-}
-
-function onCanPlay() {
-  buffering.value = false
-  if (!ready.value || hasError.value) flagRecovered()
-  ready.value = true
-}
-
-function onWaiting() {
-  if (ready.value) buffering.value = true
-}
-
-function onError() {
-  hasError.value = true
-  isPlaying.value = false
-}
-
-function onTimeUpdate() {
-  currentTime.value = audioEl.value.currentTime
-}
-
-function onEnded() {
-  isPlaying.value = false
-  currentTime.value = 0
-}
-
-onMounted(() => {
-  volume.value = loadStoredVolume()
-  audioEl.value.volume = volume.value / 100
-  // Browsers only allow autoplay-with-sound after real user interaction with the page —
-  // start muted (universally allowed) and let the user unmute via the volume control.
-  audioEl.value.muted = true
-  muted.value = true
-  audioEl.value.play().catch(() => {})
-})
-
-function togglePlay() {
-  if (!audioEl.value || controlsDisabled.value) return
-  if (isPlaying.value) {
-    audioEl.value.pause()
-  } else {
-    audioEl.value.play().catch(() => {})
-  }
-}
-
-function onSeek(event) {
-  const value = Number(event.target.value)
-  audioEl.value.currentTime = value
-  currentTime.value = value
-}
-
-function toggleMute() {
-  if (!audioEl.value) return
-  muted.value = !muted.value
-  audioEl.value.muted = muted.value
-}
-
-function onVolumeInput(event) {
-  const value = Number(event.target.value)
-  volume.value = value
-  localStorage.setItem(VOLUME_STORAGE_KEY, String(value))
-  if (!audioEl.value) return
-  audioEl.value.volume = value / 100
-  muted.value = value === 0
-  audioEl.value.muted = muted.value
-}
-
-function skip(seconds) {
-  if (!audioEl.value || controlsDisabled.value) return
-  const next = Math.min(Math.max(audioEl.value.currentTime + seconds, 0), duration.value || Infinity)
-  audioEl.value.currentTime = next
-  currentTime.value = next
-}
-
-function formatTime(seconds) {
-  if (!Number.isFinite(seconds)) return '0:00'
-  const m = Math.floor(seconds / 60)
-  const s = Math.floor(seconds % 60)
-    .toString()
-    .padStart(2, '0')
-  return `${m}:${s}`
-}
 </script>
 
 <template>
-  <div class="music-player term-pane" :data-state="dataState">
-    <audio
-      ref="audioEl"
-      :src="src"
-      preload="metadata"
-      autoplay
-      muted
-      @loadedmetadata="onLoadedMetadata"
-      @canplay="onCanPlay"
-      @waiting="onWaiting"
-      @timeupdate="onTimeUpdate"
-      @play="isPlaying = true"
-      @pause="isPlaying = false"
-      @ended="onEnded"
-      @error="onError"
-    ></audio>
+  <div
+    class="music-player term-pane"
+    :class="{ 'music-player--compact': compact }"
+    :data-state="dataState"
+    :title="compact ? `${album} — ${artist}` : undefined"
+  >
     <span class="music-player__status" role="status" aria-live="polite">{{ statusText }}</span>
 
     <div class="music-player__main">
       <img class="music-player__cover" :src="cover" :alt="`${album} 專輯封面`" loading="lazy" />
-      <div class="music-player__meta">
+      <div class="music-player__meta" v-if="!compact">
         <p class="music-player__album">{{ album }}</p>
         <p class="music-player__artist">{{ artist }}</p>
       </div>
     </div>
 
-    <div class="music-player__progress">
+    <div class="music-player__progress" v-if="!compact">
       <span class="music-player__time">{{ formatTime(currentTime) }}</span>
       <input
         type="range"
@@ -188,6 +62,7 @@ function formatTime(seconds) {
 
     <div class="music-player__controls">
       <button
+        v-if="!compact"
         type="button"
         class="music-player__btn"
         :disabled="controlsDisabled"
@@ -207,6 +82,7 @@ function formatTime(seconds) {
         <Play v-else :size="20" />
       </button>
       <button
+        v-if="!compact"
         type="button"
         class="music-player__btn"
         :disabled="controlsDisabled"
@@ -217,7 +93,7 @@ function formatTime(seconds) {
       </button>
     </div>
 
-    <div class="music-player__volume">
+    <div class="music-player__volume" v-if="!compact">
       <button
         type="button"
         class="music-player__btn music-player__btn--volume"
@@ -241,6 +117,18 @@ function formatTime(seconds) {
         @input="onVolumeInput"
       />
     </div>
+
+    <button
+      v-if="compact"
+      type="button"
+      class="music-player__btn music-player__btn--volume"
+      :disabled="controlsDisabled"
+      :aria-label="muted ? '取消靜音' : '靜音'"
+      @click="toggleMute"
+    >
+      <VolumeX v-if="muted || volume === 0" :size="16" />
+      <Volume2 v-else :size="16" />
+    </button>
   </div>
 </template>
 
@@ -500,6 +388,44 @@ function formatTime(seconds) {
 @keyframes music-player-pulse {
   50% {
     opacity: 0.55;
+  }
+}
+
+.music-player--compact {
+  flex-direction: row;
+  align-items: center;
+  width: auto;
+  max-width: none;
+  padding: var(--space-2xs) var(--space-sm);
+  gap: var(--space-sm);
+}
+
+.music-player--compact .music-player__main {
+  gap: 0;
+}
+
+.music-player--compact .music-player__cover {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.music-player--compact .music-player__controls {
+  gap: var(--space-2xs);
+}
+
+.music-player--compact .music-player__btn--play {
+  width: 2rem;
+  height: 2rem;
+}
+
+.music-player--compact .music-player__btn--volume {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+@media (max-width: 40rem) {
+  .music-player--compact .music-player__btn--volume {
+    display: none;
   }
 }
 </style>
