@@ -9,6 +9,7 @@
     "preview": "astro preview"
   },
   "dependencies": {
+    "@astrojs/rss": "^4.0.19",
     "@astrojs/vue": "^5.0.0",
     "@lucide/vue": "^1.25.0",
     "@vueuse/core": "^14.3.0",

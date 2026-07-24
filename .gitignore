@@ -27,5 +27,6 @@ dist-ssr
 .claude
 .hallmark
 .mcp.json
+config/mcporter.json
 plans/*
 docs/*

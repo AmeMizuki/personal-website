@@ -1,4 +1,5 @@
 import { ref, computed } from 'vue'
+import { t } from '@/composables/i18nStore'
 
 const VOLUME_STORAGE_KEY = 'music-player-volume'
 
@@ -31,10 +32,10 @@ export const dataState = computed(() => {
 })
 
 export const statusText = computed(() => {
-  if (hasError.value) return '音樂載入失敗'
-  if (!ready.value) return '音樂載入中'
-  if (buffering.value) return '緩衝中'
-  return '就緒'
+  if (hasError.value) return t('music.loadError')
+  if (!ready.value) return t('music.loading')
+  if (buffering.value) return t('music.buffering')
+  return t('music.ready')
 })
 
 export const progressPercent = computed(() => (duration.value ? (currentTime.value / duration.value) * 100 : 0))

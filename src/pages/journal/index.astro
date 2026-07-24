@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumb from '@/components/Breadcrumb.astro'
 import { profile } from '@/data/profile'
+import { t } from '@/i18n/utils'
 
 const entries = (await getCollection('journal')).sort((a, b) => b.data.date - a.data.date)
 const categories = [...new Set(entries.map((entry) => entry.data.category))]
@@ -15,6 +16,7 @@ const categories = [...new Set(entries.map((entry) => entry.data.category))]
 
       <p class="journal__prompt reveal" style="--i: 0">
         {profile.handle}@{profile.hostname}:~$ ls -la ~/journal
+        <a href="/rss.xml" class="journal__rss">rss</a>
       </p>
 
       <div class="journal__controls reveal" style="--i: 1">
@@ -23,7 +25,9 @@ const categories = [...new Set(entries.map((entry) => entry.data.category))]
           id="journal-search"
           class="journal__search"
           placeholder="grep ..."
-          aria-label="搜尋日記"
+          aria-label={t('journal.searchLabel')}
+          data-i18n="journal.searchLabel"
+          data-i18n-attr="aria-label"
         />
         <div class="journal__cats" id="journal-cats">
           <button type="button" class="journal__cat is-active" data-category="all">all</button>
@@ -61,7 +65,9 @@ const categories = [...new Set(entries.map((entry) => entry.data.category))]
         }
       </ul>
 
-      <p class="journal__empty" id="journal-empty" hidden>找不到符合的日記。</p>
+      <p class="journal__empty" id="journal-empty" hidden data-i18n="journal.empty">
+        {t('journal.empty')}
+      </p>
     </div>
   </div>
 </BaseLayout>
@@ -125,6 +131,19 @@ const categories = [...new Set(entries.map((entry) => entry.data.category))]
     font-size: var(--text-sm);
     color: var(--color-muted);
     margin: 0 0 var(--space-lg);
+  }
+
+  .journal__rss {
+    margin-inline-start: var(--space-sm);
+    color: var(--color-muted);
+    text-decoration: underline;
+    text-decoration-color: var(--color-rule);
+    text-underline-offset: 3px;
+    transition: color var(--dur-short) var(--ease-out);
+  }
+
+  .journal__rss:hover {
+    color: var(--color-accent);
   }
 
   .journal__controls {

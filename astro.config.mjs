@@ -17,6 +17,7 @@ function rehypeLazyImages() {
 }
 
 export default defineConfig({
+  site: 'https://example.com', // TODO: replace with the real production domain before deploying
   integrations: [vue()],
   markdown: {
     rehypePlugins: [rehypeLazyImages],

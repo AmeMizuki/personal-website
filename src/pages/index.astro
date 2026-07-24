@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import TextType from '@/components/TextType/TextType.vue'
+import TerminalPrompt from '@/components/TerminalPrompt.vue'
 import MusicPlayerSkin from '@/components/MusicPlayerSkin.vue'
 import { Button } from '@/components/ui/button'
 import { profile } from '@/data/profile'
@@ -30,6 +31,8 @@ const latest = (await getCollection('journal')).sort((a, b) => b.data.date - a.d
             ))
           }
         </ol>
+
+        <TerminalPrompt client:visible />
 
         <h1 class="home-hero__name reveal" style={`--i: ${bootLines.length}`}>{profile.name}</h1>
 

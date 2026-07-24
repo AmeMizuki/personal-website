@@ -4,6 +4,7 @@ import { profile } from '@/data/profile'
 import DecryptedText from '@/components/DecryptedText/DecryptedText.vue'
 import MusicPlayerSkin from '@/components/MusicPlayerSkin.vue'
 import { initPlayer } from '@/composables/musicPlayerStore'
+import { locale, t, toggleLocale } from '@/composables/i18nStore'
 
 const MUSIC_VIDEO_ID = 'acnx9QFbAp4'
 
@@ -26,6 +27,7 @@ const links = [
   { to: '/about', cmd: '~/about' },
   { to: '/journal', cmd: '~/journal' },
   { to: '/notes', cmd: '~/notes' },
+  { to: '/projects', cmd: '~/projects' },
 ]
 
 const promptText = computed(() => `${profile.handle}@${profile.hostname}:~$`)
@@ -66,6 +68,10 @@ function isActive(to) {
         artist="Mili"
         cover="https://img.youtube.com/vi/acnx9QFbAp4/hqdefault.jpg"
       />
+
+      <button type="button" class="term-nav__lang" :aria-label="t('lang.toggleLabel')" @click="toggleLocale">
+        {{ locale === 'zh-Hant' ? 'EN' : '中' }}
+      </button>
     </div>
   </nav>
 </template>
@@ -164,6 +170,31 @@ function isActive(to) {
 
 .term-nav__player {
   flex-shrink: 0;
+}
+
+.term-nav__lang {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  background: transparent;
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius);
+  padding: var(--space-3xs) var(--space-xs);
+  cursor: pointer;
+  transition:
+    color var(--dur-short) var(--ease-out),
+    border-color var(--dur-short) var(--ease-out);
+}
+
+.term-nav__lang:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.term-nav__lang:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
 @media (max-width: 40rem) {

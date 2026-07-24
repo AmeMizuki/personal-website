@@ -17,6 +17,7 @@ import {
   skip,
   formatTime,
 } from '@/composables/musicPlayerStore'
+import { t } from '@/composables/i18nStore'
 
 defineProps({
   album: { type: String, required: true },
@@ -36,7 +37,7 @@ defineProps({
     <span class="music-player__status" role="status" aria-live="polite">{{ statusText }}</span>
 
     <div class="music-player__main">
-      <img class="music-player__cover" :src="cover" :alt="`${album} 專輯封面`" loading="lazy" />
+      <img class="music-player__cover" :src="cover" :alt="t('music.cover', { album })" loading="lazy" />
       <div class="music-player__meta" v-if="!compact">
         <p class="music-player__album">{{ album }}</p>
         <p class="music-player__artist">{{ artist }}</p>
@@ -54,7 +55,7 @@ defineProps({
         :value="currentTime"
         :disabled="controlsDisabled"
         :style="{ '--progress': `${progressPercent}%` }"
-        aria-label="播放進度"
+        :aria-label="t('music.seek')"
         @input="onSeek"
       />
       <span class="music-player__time">{{ formatTime(duration) }}</span>
@@ -66,7 +67,7 @@ defineProps({
         type="button"
         class="music-player__btn"
         :disabled="controlsDisabled"
-        aria-label="倒退 10 秒"
+        :aria-label="t('music.rewind')"
         @click="skip(-10)"
       >
         <Rewind :size="18" />
@@ -75,7 +76,7 @@ defineProps({
         type="button"
         class="music-player__btn music-player__btn--play"
         :disabled="controlsDisabled"
-        :aria-label="isPlaying ? '暫停' : '播放'"
+        :aria-label="isPlaying ? t('music.pause') : t('music.play')"
         @click="togglePlay"
       >
         <Pause v-if="isPlaying" :size="20" />
@@ -86,7 +87,7 @@ defineProps({
         type="button"
         class="music-player__btn"
         :disabled="controlsDisabled"
-        aria-label="快轉 10 秒"
+        :aria-label="t('music.forward')"
         @click="skip(10)"
       >
         <FastForward :size="18" />
@@ -98,7 +99,7 @@ defineProps({
         type="button"
         class="music-player__btn music-player__btn--volume"
         :disabled="controlsDisabled"
-        :aria-label="muted ? '取消靜音' : '靜音'"
+        :aria-label="muted ? t('music.unmute') : t('music.mute')"
         @click="toggleMute"
       >
         <VolumeX v-if="muted || volume === 0" :size="16" />
@@ -113,7 +114,7 @@ defineProps({
         :value="muted ? 0 : volume"
         :disabled="controlsDisabled"
         :style="{ '--progress': `${muted ? 0 : volume}%` }"
-        aria-label="音量"
+        :aria-label="t('music.volume')"
         @input="onVolumeInput"
       />
     </div>
