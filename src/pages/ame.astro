@@ -11,6 +11,13 @@
 // used (copyright — it's the publisher's commercial art); this is text/CSS only. The
 // "title card" wordmark below is original typography recreating the impression of a
 // title screen, not the actual logo asset.
+//
+// Hallmark · card restyle studied-DNA (source: url, https://needygirl-anime.com/)
+// Extracted from the official TV anime site's served CSS: black-outline "sticker/deco"
+// card language (thick #000-ish border + hard offset shadow, no soft glassmorphism) and
+// a pink/purple/cyan three-way accent trio (vs. the original pink/cyan duo). Applied to
+// .block cards, .tag pills, and .pin-badge — sticker feel on the character-intro cards
+// preserved per explicit request, just unified with the new outline language.
 ---
 
 <!doctype html>
@@ -21,7 +28,7 @@
     <meta name="robots" content="noindex" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@500;700&family=DotGothic16&display=swap" rel="stylesheet" />
     <title>あめ ★ a fan page</title>
   </head>
   <body>
@@ -30,33 +37,82 @@
       <div class="blob-parallax" data-blob="cyan" data-strength="-40"><span class="blob blob--cyan"></span></div>
       <div class="blob-parallax" data-blob="pink2" data-strength="70"><span class="blob blob--pink2"></span></div>
       <div class="blob-parallax" data-blob="cyan2" data-strength="-60"><span class="blob blob--cyan2"></span></div>
+      <div class="blob-parallax" data-blob="pink3" data-strength="50"><span class="blob blob--pink3"></span></div>
       <div class="cursor-glow"></div>
       <span class="spark spark--1">✦</span>
       <span class="spark spark--2">✦</span>
       <span class="spark spark--3">✦</span>
+      <span class="spark spark--4">✦</span>
+      <span class="spark spark--5">✦</span>
+      <span class="spark spark--6">✦</span>
       <div class="grain"></div>
     </div>
 
     <section class="titlecard" id="titlecard">
       <p class="titlecard-eyebrow">a fan page based on</p>
-      <h2 class="titlecard-wordmark">NEEDY STREAMER OVERLOAD</h2>
+      <img class="titlecard-wordmark" src="https://i.meee.com.tw/VMcKSsl.png" alt="Needy Streamer Overload" />
       <p class="titlecard-hint">↓ scroll</p>
     </section>
 
     <main class="page">
-      <section class="hero reveal" data-reveal>
-        <div class="photo-frame" aria-hidden="true"><span>✦</span></div>
-        <p class="eyebrow">a small personal page about a character I like</p>
-        <h1 class="title">
-          <span class="title-jp">あめ</span>
-          <span class="title-en">Ame</span>
-        </h1>
-        <p class="catch">
-          <span class="hl hl--pink">素顔</span>はちょっとわがまま、<br />
-          配信中は<span class="hl hl--cyan">ネットアイドル</span>に変身する —
-          <br />
-          そのギャップが好きなんです。
-        </p>
+      <section class="duo reveal" data-reveal>
+        <img class="duo-photo" src="https://i.meee.com.tw/gYwbACC.png" alt="あめちゃんと超絶最かわてんしちゃんのツーショット" />
+        <p class="duo-caption">素顔の子と、配信中の子。同じ人なのに、二人でいるみたい。</p>
+      </section>
+
+      <section class="hero-carousel reveal" data-reveal>
+        <div class="carousel-track" id="carouselTrack">
+          <div class="carousel-slide win--pink">
+            <div class="win-titlebar">
+              <span class="win-titlebar-label">■AME-CHAN</span>
+              <span class="win-titlebar-icons">
+                <span class="win-icon"></span>
+                <span class="win-icon"></span>
+                <span class="win-icon win-icon--close"></span>
+              </span>
+            </div>
+            <div class="win-body">
+              <div class="win-body-text">
+                <h1 class="win-name">あめちゃん</h1>
+                <p class="win-cv"><span class="win-cv-label">支え役</span> 「ピ」（プレイヤーのあなた）</p>
+                <p class="win-desc">
+                  物静かに見えて実はわがまま。<br />
+                  承認欲求をこじらせて、<br />
+                  配信者「あめちゃん」として活動中。<br />
+                  カメラの前だけ、完璧な子を演じている。
+                </p>
+              </div>
+              <img class="win-portrait" src="https://i.meee.com.tw/YTZwgXK.png" alt="あめちゃん" />
+            </div>
+          </div>
+          <div class="carousel-slide win--cyan">
+            <div class="win-titlebar">
+              <span class="win-titlebar-label">■KANGEL</span>
+              <span class="win-titlebar-icons">
+                <span class="win-icon"></span>
+                <span class="win-icon"></span>
+                <span class="win-icon win-icon--close"></span>
+              </span>
+            </div>
+            <div class="win-body">
+              <div class="win-body-text">
+                <h1 class="win-name">超絶最かわてんしちゃん</h1>
+                <p class="win-cv"><span class="win-cv-label">支え役</span> 「ピ」（プレイヤーのあなた）</p>
+                <p class="win-desc">
+                  あめちゃんが配信中に変身する<br />
+                  「ネットアイドル」。<br />
+                  いつも優しい良い子ぶってるけど、<br />
+                  オタク系には特に愛想がいいらしい。
+                </p>
+              </div>
+              <img class="win-portrait" src="https://i.meee.com.tw/eEN7oo7.png" alt="超絶最かわてんしちゃん" />
+            </div>
+          </div>
+        </div>
+        <div class="carousel-dots" id="carouselDots">
+          <button class="carousel-dot is-active" type="button" aria-label="あめちゃん"></button>
+          <button class="carousel-dot" type="button" aria-label="超絶最かわてんしちゃん"></button>
+        </div>
       </section>
 
       <div class="divider" aria-hidden="true"><span>✦</span><span>✦</span><span>✦</span></div>
@@ -74,13 +130,21 @@
       <div class="divider" aria-hidden="true"><span>✦</span><span>✦</span><span>✦</span></div>
 
       <section class="block reveal" data-reveal>
-        <h2 class="block-title">推しポイント</h2>
-        <ul class="tag-list">
-          <li class="tag tag--pink">素顔とアイドル姿のギャップ</li>
-          <li class="tag tag--cyan">危なっかしいのに目が離せない</li>
-          <li class="tag tag--pink">選んだ道で変わる結末</li>
-          <li class="tag tag--cyan">何周でも生き直したくなる</li>
-        </ul>
+        <h2 class="block-title">好きなシーン</h2>
+        <div class="scene-grid">
+          <div class="scene-card scene-card--pink">
+            <p class="scene-card-text">配信開始のカウントダウン。画面の向こうの顔と、素の顔がぱっと切り替わる瞬間。</p>
+          </div>
+          <div class="scene-card scene-card--cyan">
+            <p class="scene-card-text">深夜、誰にも見せない素顔でぽつりとつぶやく独り言。ここだけ時間が止まる。</p>
+          </div>
+          <div class="scene-card scene-card--purple">
+            <p class="scene-card-text">選択肢を選ぶ手が一瞬止まる、あの緊張感。どっちを選んでも誰かが傷つく気がして。</p>
+          </div>
+          <div class="scene-card scene-card--cyan">
+            <p class="scene-card-text">バッドエンドの後、何事もなかったように次の周回が始まる。その淡々とした感じが逆に刺さる。</p>
+          </div>
+        </div>
       </section>
 
       <p class="back-link reveal" data-reveal>
@@ -117,21 +181,25 @@
           return
         }
 
-        gsap.from('.hero', {
-          opacity: 0,
-          scale: 0.9,
-          duration: 0.7,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: '.hero', start: 'top 85%', once: true },
+        document.querySelectorAll('.hero-carousel').forEach((hero) => {
+          gsap.from(hero, {
+            opacity: 0,
+            scale: 0.9,
+            duration: 0.7,
+            ease: 'power2.out',
+            scrollTrigger: { trigger: hero, start: 'top 85%', end: 'bottom 15%', toggleActions: 'play reverse play reverse' },
+          })
         })
 
-        gsap.from('.photo-frame', {
-          opacity: 0,
-          scale: 0.5,
-          rotate: -20,
-          duration: 0.7,
-          ease: 'back.out(1.7)',
-          scrollTrigger: { trigger: '.photo-frame', start: 'top 88%', once: true },
+        document.querySelectorAll('.portrait-corner').forEach((portrait) => {
+          gsap.from(portrait, {
+            opacity: 0,
+            scale: 0.5,
+            rotate: -12,
+            duration: 0.7,
+            ease: 'back.out(1.7)',
+            scrollTrigger: { trigger: portrait, start: 'top 88%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' },
+          })
         })
 
         document.querySelectorAll('.block').forEach((block, i) => {
@@ -140,18 +208,29 @@
             x: i % 2 === 0 ? -60 : 60,
             duration: 0.6,
             ease: 'power2.out',
-            scrollTrigger: { trigger: block, start: 'top 85%', once: true },
+            scrollTrigger: { trigger: block, start: 'top 85%', end: 'bottom 15%', toggleActions: 'play reverse play reverse' },
           })
         })
 
-        gsap.from('.tag', {
-          opacity: 0,
-          scale: 0.4,
-          y: 24,
-          duration: 0.5,
-          ease: 'back.out(2)',
-          stagger: 0.08,
-          scrollTrigger: { trigger: '.tag-list', start: 'top 90%', once: true },
+        document.querySelectorAll('.duo').forEach((duo) => {
+          gsap.from(duo, {
+            opacity: 0,
+            scale: 0.92,
+            duration: 0.8,
+            ease: 'power2.out',
+            scrollTrigger: { trigger: duo, start: 'top 85%', end: 'bottom 15%', toggleActions: 'play reverse play reverse' },
+          })
+        })
+
+        document.querySelectorAll('.scene-grid').forEach((grid) => {
+          gsap.from(grid.querySelectorAll('.scene-card'), {
+            opacity: 0,
+            y: 28,
+            duration: 0.5,
+            ease: 'power2.out',
+            stagger: 0.1,
+            scrollTrigger: { trigger: grid, start: 'top 88%', end: 'bottom 12%', toggleActions: 'play reverse play reverse' },
+          })
         })
 
         document.querySelectorAll('.divider').forEach((divider) => {
@@ -162,7 +241,7 @@
             duration: 0.4,
             ease: 'back.out(2.5)',
             stagger: 0.1,
-            scrollTrigger: { trigger: divider, start: 'top 95%', once: true },
+            scrollTrigger: { trigger: divider, start: 'top 95%', end: 'bottom 5%', toggleActions: 'play reverse play reverse' },
           })
         })
 
@@ -171,8 +250,47 @@
           y: 20,
           duration: 0.5,
           ease: 'power2.out',
-          scrollTrigger: { trigger: '.back-link', start: 'top 95%', once: true },
+          scrollTrigger: { trigger: '.back-link', start: 'top 95%', end: 'bottom 5%', toggleActions: 'play reverse play reverse' },
         })
+      }
+
+      function initHeroCarousel() {
+        const track = document.getElementById('carouselTrack')
+        const dots = document.querySelectorAll('#carouselDots .carousel-dot')
+        if (!track || !dots.length) return
+
+        dots.forEach((dot, i) => {
+          dot.addEventListener('click', () => {
+            track.scrollTo({ left: track.clientWidth * i, behavior: 'auto' })
+          })
+        })
+
+        const syncDots = () => {
+          const i = Math.round(track.scrollLeft / track.clientWidth)
+          dots.forEach((dot, dotIndex) => dot.classList.toggle('is-active', dotIndex === i))
+        }
+        track.addEventListener('scroll', syncDots, { passive: true })
+
+        let isDragging = false
+        let startX = 0
+        let startScroll = 0
+        track.addEventListener('pointerdown', (event) => {
+          isDragging = true
+          startX = event.clientX
+          startScroll = track.scrollLeft
+          track.setPointerCapture(event.pointerId)
+        })
+        track.addEventListener('pointermove', (event) => {
+          if (!isDragging) return
+          track.scrollLeft = startScroll - (event.clientX - startX)
+        })
+        const stopDrag = () => {
+          isDragging = false
+          const i = Math.round(track.scrollLeft / track.clientWidth)
+          track.scrollTo({ left: track.clientWidth * i, behavior: 'auto' })
+        }
+        track.addEventListener('pointerup', stopDrag)
+        track.addEventListener('pointercancel', stopDrag)
       }
 
       function initBlobParallax() {
@@ -220,11 +338,12 @@
         if (reducedMotion) return
         const container = document.querySelector('.atmosphere')
         const colors = ['#ff42d5', '#07dde5']
-        for (let i = 0; i < 14; i++) spawnFloatingSpark(container, colors)
+        for (let i = 0; i < 20; i++) spawnFloatingSpark(container, colors)
       }
 
       initTitleCardDissolve()
       initReveal()
+      initHeroCarousel()
       initBlobParallax()
       initCursorGlow()
       initFloatingSparkles()
@@ -312,6 +431,17 @@
         animation-delay: -6s;
       }
 
+      .blob--pink3 {
+        width: 18rem;
+        height: 18rem;
+        background: #ff42d5;
+        bottom: 20%;
+        left: 8%;
+        opacity: 0.18;
+        animation: drift 20s ease-in-out infinite alternate-reverse;
+        animation-delay: -12s;
+      }
+
       @keyframes drift {
         to {
           transform: translate(4rem, 3rem) scale(1.1);
@@ -369,6 +499,26 @@
         animation-delay: -1.6s;
       }
 
+      .spark--4 {
+        top: 82%;
+        left: 15%;
+        color: #07dde5;
+        animation-delay: -1.1s;
+      }
+
+      .spark--5 {
+        top: 50%;
+        left: 4%;
+        animation-delay: -2s;
+      }
+
+      .spark--6 {
+        bottom: 12%;
+        right: 8%;
+        color: #07dde5;
+        animation-delay: -1.4s;
+      }
+
       @keyframes twinkle {
         0%,
         100% {
@@ -401,16 +551,18 @@
       }
 
       .titlecard-wordmark {
-        font-weight: 700;
-        font-size: clamp(1.6rem, 7vw, 3.25rem);
-        line-height: 1.3;
-        max-width: 20ch;
+        max-width: min(98vw, 56rem);
+        width: 100%;
+        height: auto;
         margin: 0;
-        background: linear-gradient(90deg, #ff42d5, #07dde5);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        overflow-wrap: anywhere;
+        transition: transform 0.35s ease-out, filter 0.35s ease-out;
+      }
+
+      @media (hover: hover) {
+        .titlecard-wordmark:hover {
+          transform: scale(1.05) rotate(-1deg);
+          filter: drop-shadow(0 8px 24px rgba(255, 66, 213, 0.35));
+        }
       }
 
       .titlecard-hint {
@@ -433,86 +585,232 @@
       .page {
         position: relative;
         z-index: 1;
-        max-width: 42rem;
+        max-width: 62rem;
         margin: 0 auto;
         padding: clamp(2rem, 8vw, 4rem) 1.5rem 4rem;
       }
 
-      .hero,
       .block {
-        background: rgba(255, 255, 255, 0.55);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.7);
-        border-radius: 1.5rem;
+        background: #fffdf9;
+        border: 3px solid #2b2320;
+        border-radius: 1.25rem;
         padding: clamp(1.5rem, 5vw, 2.5rem);
+        max-width: 42rem;
+        margin-inline: auto;
+        box-shadow: 6px 6px 0 rgba(43, 35, 32, 0.9);
       }
 
-      .hero {
+      .hero-carousel {
+        background: #fffdf9;
+        border: 3px solid #2b2320;
+        border-radius: 1.25rem;
+        box-shadow: 6px 6px 0 rgba(43, 35, 32, 0.9);
+        padding: 0;
+        margin-block-start: 3rem;
+        width: min(100%, 58rem);
+        margin-inline: auto;
+        overflow: hidden;
+      }
+
+      .carousel-track {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        cursor: grab;
+        touch-action: pan-y;
+        user-select: none;
+      }
+
+      .carousel-track:active {
+        cursor: grabbing;
+      }
+
+      .carousel-track::-webkit-scrollbar {
+        display: none;
+      }
+
+      .carousel-slide {
+        position: relative;
+        flex: 0 0 100%;
+        scroll-snap-align: start;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .win-titlebar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--win-bar, #a3160f);
+        color: #fff;
+        padding: 0.4rem 0.6rem;
+        font-family: 'DotGothic16', 'M PLUS 1p', monospace;
+        font-size: 0.9rem;
+        letter-spacing: 0.02em;
+      }
+
+      .win--pink {
+        --win-bar: #a3160f;
+        --win-accent: #c4392f;
+      }
+
+      .win--cyan {
+        --win-bar: #0f6a8a;
+        --win-accent: #0a7d84;
+      }
+
+      .win-titlebar-icons {
+        display: flex;
+        gap: 0.3rem;
+      }
+
+      .win-icon {
+        width: 0.9rem;
+        height: 0.9rem;
+        background: #fff;
+        border: 1px solid rgba(0, 0, 0, 0.35);
+      }
+
+      .win-icon--close {
+        position: relative;
+      }
+
+      .win-icon--close::before,
+      .win-icon--close::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0.7rem;
+        height: 1.5px;
+        background: var(--win-bar, #a3160f);
+      }
+
+      .win-icon--close::before {
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+
+      .win-icon--close::after {
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
+
+      .win-body {
+        position: relative;
+        background: #fff;
+        padding: clamp(2rem, 5vw, 3.5rem);
+        min-height: clamp(24rem, 42vw, 32rem);
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: clamp(2rem, 5vw, 5rem);
+      }
+
+      .win-body-text {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .win-name {
+        font-family: 'DotGothic16', 'M PLUS 1p', monospace;
+        font-size: clamp(1.6rem, 4vw, 2.4rem);
+        font-weight: 400;
+        color: #2b2320;
+        margin: 0 0 1.25rem;
+        overflow-wrap: anywhere;
+      }
+
+      .win-cv {
+        font-family: 'DotGothic16', 'M PLUS 1p', monospace;
+        font-size: 1rem;
+        color: #2b2320;
+        margin: 0 0 1.5rem;
+      }
+
+      .win-cv-label {
+        color: var(--win-accent, #c4392f);
+        margin-inline-end: 0.5rem;
+      }
+
+      .win-desc {
+        font-family: 'DotGothic16', 'M PLUS 1p', monospace;
+        font-size: 1rem;
+        line-height: 1.9;
+        color: #2b2320;
+        margin: 0;
+      }
+
+      .win-portrait {
+        flex: 0 0 auto;
+        width: clamp(12rem, 24vw, 18rem);
+        height: auto;
+        object-fit: contain;
+        pointer-events: none;
+        -webkit-user-drag: none;
+        user-select: none;
+      }
+
+      @media (max-width: 38rem) {
+        .win-body {
+          flex-direction: column-reverse;
+          align-items: center;
+          gap: 1rem;
+          text-align: center;
+        }
+
+        .win-portrait {
+          width: clamp(9rem, 42vw, 12rem);
+        }
+      }
+
+      .carousel-dots {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-block-start: 1.25rem;
+      }
+
+      .carousel-dot {
+        width: 0.5rem;
+        height: 0.5rem;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background: rgba(43, 35, 32, 0.2);
+        cursor: pointer;
+        transition: background 0.2s ease-out, transform 0.2s ease-out;
+      }
+
+      .carousel-dot.is-active {
+        background: #ff42d5;
+        transform: scale(1.3);
+      }
+
+      .duo {
         text-align: center;
+        width: 100vw;
+        margin-inline-start: 50%;
+        transform: translateX(-50%);
+        padding-block-end: 2rem;
       }
 
-      .photo-frame {
-        width: 6rem;
-        height: 6rem;
-        margin: 0 auto 1.25rem;
-        border-radius: 50%;
-        padding: 3px;
-        background: conic-gradient(from 180deg, #ff42d5, #07dde5, #ff42d5);
-      }
-
-      .photo-frame span {
+      .duo-photo {
         width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        display: grid;
-        place-items: center;
-        font-size: 1.6rem;
-        color: #ff42d5;
-        background: radial-gradient(circle at 35% 30%, #fff8fc 0%, #ffe3f6 45%, #d6f7f8 100%);
+        max-width: 53.5rem;
+        display: block;
+        margin: 0 auto 1.25rem;
+      }
+
+      .duo-caption {
+        font-size: 1rem;
+        color: #8a7a6d;
+        margin: 0;
       }
 
       .eyebrow {
         font-size: 0.85rem;
         color: #8a7a6d;
         margin: 0 0 1rem;
-      }
-
-      .title {
-        margin: 0 0 1.5rem;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: baseline;
-        justify-content: center;
-        gap: 0.75rem;
-      }
-
-      .title-jp {
-        font-weight: 700;
-        font-size: clamp(2.75rem, 12vw, 5rem);
-        color: #2b2320;
-        overflow-wrap: anywhere;
-      }
-
-      .title-en {
-        font-weight: 500;
-        font-size: clamp(1.25rem, 4vw, 1.75rem);
-        color: #ff42d5;
-      }
-
-      .catch {
-        font-weight: 700;
-        font-size: clamp(1.05rem, 3vw, 1.4rem);
-        line-height: 1.8;
-        margin: 0;
-      }
-
-      .hl--pink {
-        color: #ff42d5;
-      }
-
-      .hl--cyan {
-        color: #07dde5;
       }
 
       .divider {
@@ -548,46 +846,51 @@
         max-width: 38rem;
       }
 
-      .tag-list {
-        list-style: none;
+      .scene-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+
+      .scene-card {
+        position: relative;
+        background: #fffdf9;
+        border: 3px solid #2b2320;
+        border-radius: 1rem;
+        padding: 1.1rem 1.2rem;
+        box-shadow: 4px 4px 0 rgba(43, 35, 32, 0.9);
+        border-inline-start-width: 6px;
+        transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+      }
+
+      .scene-card--pink {
+        border-inline-start-color: #ff42d5;
+      }
+
+      .scene-card--cyan {
+        border-inline-start-color: #07dde5;
+      }
+
+      .scene-card--purple {
+        border-inline-start-color: #8c6fe6;
+      }
+
+      .scene-card-text {
+        font-size: 0.95rem;
+        line-height: 1.75;
         margin: 0;
-        padding: 0;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.6rem;
-      }
-
-      .tag {
-        font-weight: 700;
-        font-size: 0.85rem;
-        color: #fff;
-        padding: 0.5em 1em;
-        border-radius: 999px;
-        cursor: default;
-        transition:
-          transform 0.2s ease-out,
-          box-shadow 0.2s ease-out;
-      }
-
-      .tag--pink {
-        background: #ff42d5;
-      }
-
-      .tag--cyan {
-        background: #07dde5;
       }
 
       @media (hover: hover) {
-        .tag:hover {
-          transform: translateY(-3px) scale(1.05);
+        .scene-card:hover {
+          transform: translate(-2px, -2px);
+          box-shadow: 6px 6px 0 rgba(43, 35, 32, 0.9);
         }
+      }
 
-        .tag--pink:hover {
-          box-shadow: 0 8px 20px rgba(255, 66, 213, 0.45);
-        }
-
-        .tag--cyan:hover {
-          box-shadow: 0 8px 20px rgba(7, 221, 229, 0.45);
+      @media (max-width: 30rem) {
+        .scene-grid {
+          grid-template-columns: 1fr;
         }
       }
 
@@ -605,12 +908,12 @@
       }
 
       @media (max-width: 26rem) {
-        .hero,
+        .hero-carousel,
         .block {
           border-radius: 1rem;
         }
 
-        .photo-frame {
+        .portrait {
           width: 5rem;
           height: 5rem;
         }
