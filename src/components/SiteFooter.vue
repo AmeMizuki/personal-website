@@ -42,6 +42,9 @@ onBeforeUnmount(() => {
 .site-footer {
   position: relative;
   z-index: var(--z-raised);
+  background: color-mix(in oklab, var(--color-paper-2) 82%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-top: 1px solid var(--color-rule);
   padding: var(--space-lg) clamp(var(--space-md), 4vw, var(--space-xl));
 }

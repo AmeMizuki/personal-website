@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content'
+import { ArrowUpRight } from '@lucide/vue'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumb from '@/components/Breadcrumb.astro'
 import { Badge } from '@/components/ui/badge'
@@ -39,12 +40,12 @@ const projects = (await getCollection('projects')).sort((a, b) => b.data.date - 
               <div class="projects__links">
                 {project.data.link && (
                   <a href={project.data.link} class="projects__link" target="_blank" rel="noopener">
-                    demo →
+                    demo <ArrowUpRight size={16} aria-hidden="true" />
                   </a>
                 )}
                 {project.data.repo && (
                   <a href={project.data.repo} class="projects__link" target="_blank" rel="noopener">
-                    repo →
+                    repo <ArrowUpRight size={16} aria-hidden="true" />
                   </a>
                 )}
               </div>
@@ -152,6 +153,9 @@ const projects = (await getCollection('projects')).sort((a, b) => b.data.date - 
   }
 
   .projects__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
     font-family: var(--font-mono);
     font-size: var(--text-sm);
     color: var(--color-ink);

@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content'
+import { ArrowLeft, ArrowRight, Copy, Check } from '@lucide/vue'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumb from '@/components/Breadcrumb.astro'
 import { profile } from '@/data/profile'
@@ -68,21 +69,25 @@ const readingMinutes = Math.max(1, Math.round(strippedBody.length / CHARS_PER_MI
       <nav class="entry__pager" aria-label={t('journal.pagerNav')} data-i18n="journal.pagerNav" data-i18n-attr="aria-label">
         {older ? (
           <a href={`/journal/${older.id}`} class="entry__pager-link entry__pager-link--older">
-            <span class="entry__pager-label" data-i18n="journal.pagerOlder">{t('journal.pagerOlder')}</span>
+            <span class="entry__pager-label"><ArrowLeft size={14} aria-hidden="true" /><span data-i18n="journal.pagerOlder">{t('journal.pagerOlder')}</span></span>
             <span class="entry__pager-title">{older.data.title}</span>
           </a>
         ) : <span />}
         {newer ? (
           <a href={`/journal/${newer.id}`} class="entry__pager-link entry__pager-link--newer">
-            <span class="entry__pager-label" data-i18n="journal.pagerNewer">{t('journal.pagerNewer')}</span>
+            <span class="entry__pager-label"><span data-i18n="journal.pagerNewer">{t('journal.pagerNewer')}</span><ArrowRight size={14} aria-hidden="true" /></span>
             <span class="entry__pager-title">{newer.data.title}</span>
           </a>
         ) : <span />}
       </nav>
 
-      <a href="/journal" class="entry__back">← cd ..</a>
+      <a href="/journal" class="entry__back"><ArrowLeft size={16} aria-hidden="true" /> cd ..</a>
     </div>
   </div>
+  <template id="entry-copy-icons">
+    <Copy size={14} aria-hidden="true" />
+    <Check size={14} aria-hidden="true" />
+  </template>
 </BaseLayout>
 
 <script>
@@ -93,13 +98,10 @@ const readingMinutes = Math.max(1, Math.round(strippedBody.length / CHARS_PER_MI
   function setup() {
     const blocks = document.querySelectorAll('.entry__body pre:not([data-copy-ready])')
 
-    // Inline lucide "copy" / "check" icon markup (matches the @lucide/vue icons used
-    // elsewhere in the site) — this button is plain DOM, not a Vue island, so the SVG
-    // is inlined directly rather than pulling in a whole component for one icon swap.
-    const ICON_COPY =
-      '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>'
-    const ICON_CHECK =
-      '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
+    const icons = document.querySelector<HTMLTemplateElement>('#entry-copy-icons')
+    if (!icons) return
+    const ICON_COPY = icons.content.querySelector('.lucide-copy')!.outerHTML
+    const ICON_CHECK = icons.content.querySelector('.lucide-check')!.outerHTML
 
     blocks.forEach((pre) => {
       pre.dataset.copyReady = 'true'
@@ -358,6 +360,9 @@ const readingMinutes = Math.max(1, Math.round(strippedBody.length / CHARS_PER_MI
   }
 
   .entry__back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
     font-family: var(--font-mono);
     font-size: var(--text-sm);
     color: var(--color-muted);
@@ -393,6 +398,9 @@ const readingMinutes = Math.max(1, Math.round(strippedBody.length / CHARS_PER_MI
   }
 
   .entry__pager-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
     font-family: var(--font-mono);
     font-size: var(--text-xs);
     color: var(--color-muted);

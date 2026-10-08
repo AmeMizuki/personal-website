@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content'
+import { ArrowRight } from '@lucide/vue'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumb from '@/components/Breadcrumb.astro'
 import { profile } from '@/data/profile'
@@ -58,7 +59,7 @@ const categories = [...new Set(entries.map((entry) => entry.data.category))]
                   <span class="journal__category">[{entry.data.category}]</span>
                   <span class="journal__excerpt">{entry.data.excerpt}</span>
                 </span>
-                <span class="journal__arrow">→</span>
+                <span class="journal__arrow"><ArrowRight size={16} aria-hidden="true" /></span>
               </a>
             </li>
           ))

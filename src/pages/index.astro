@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content'
+import { ArrowRight } from '@lucide/vue'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import TextType from '@/components/TextType/TextType.vue'
 import TerminalPrompt from '@/components/TerminalPrompt.vue'
@@ -10,7 +11,7 @@ import { profile } from '@/data/profile'
 const bootLines = [
   `booting ${profile.hostname}...`,
   `loading identity: ${profile.handle}`,
-  'render target: faulty_terminal.canvas — ok',
+  'render target: ascii_background.pre — ok',
   'ready.',
 ]
 
@@ -77,7 +78,7 @@ const latest = (await getCollection('journal')).sort((a, b) => b.data.date - a.d
               <a href={`/journal/${entry.id}`} class="home-latest__link">
                 <span class="home-latest__date">{entry.data.date.toISOString().slice(0, 10)}</span>
                 <span class="home-latest__title">{entry.data.title}</span>
-                <span class="home-latest__arrow">→</span>
+                <span class="home-latest__arrow"><ArrowRight size={16} aria-hidden="true" /></span>
               </a>
             </li>
           ))

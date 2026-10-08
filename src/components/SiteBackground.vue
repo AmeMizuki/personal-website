@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import FaultyTerminal from '@/components/FaultyTerminal/FaultyTerminal.vue'
+import AsciiBackground from '@/components/AsciiBackground.vue'
 
 const prefersReducedMotion = ref(false)
 
@@ -12,22 +12,9 @@ const TINT = '#eef0f4'
 </script>
 
 <template>
-  <FaultyTerminal
+  <AsciiBackground
     class="site-bg"
     :tint="TINT"
-    :scale="2"
-    :grid-mul="[3, 2]"
-    :digit-size="1.2"
-    :scanline-intensity="0.25"
-    :curvature="0.15"
-    :chromatic-aberration="0"
-    :brightness="0.55"
-    :mouse-strength="0.25"
-    :glitch-amount="0.4"
-    :flicker-amount="0.5"
-    :noise-amp="0.6"
-    :time-scale="0.2"
-    :page-load-animation="!prefersReducedMotion"
     :pause="prefersReducedMotion"
   />
 </template>

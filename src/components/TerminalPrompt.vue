@@ -55,6 +55,7 @@ const draft = ref('')
 const commandLog = ref([])
 const logPointer = ref(0)
 const inputEl = ref(null)
+const terminalEl = ref(null)
 
 onMounted(() => {
   commandLog.value = loadLog()
@@ -125,12 +126,6 @@ function runCommand(raw) {
     case 'logout':
       pushOutput([t('terminal.exit')])
       break
-    case 'open':
-      // Undocumented on purpose — not in HELP_LINES, not in COMMANDS (no tab-complete
-      // hint) — a real easter egg only found by guessing.
-      if (arg === 'ame' || arg === 'needy') navigate('/ame')
-      else pushOutput([t('terminal.openNotFound', { arg: arg || '(missing operand)' })])
-      break
     default:
       pushOutput([t('terminal.notFound', { cmd })])
   }
@@ -153,9 +148,11 @@ function autocomplete() {
   if (matches.length === 1) draft.value = `${cmd} ${matches[0]}`
 }
 
-function onEnter() {
+async function onEnter() {
   runCommand(draft.value)
   draft.value = ''
+  await nextTick()
+  terminalEl.value?.scrollTo(0, terminalEl.value.scrollHeight)
 }
 
 function recallOlder() {
@@ -188,8 +185,8 @@ function onEnterLine(el, done) {
 </script>
 
 <template>
-  <div class="term-prompt" @click="focusInput">
-    <TransitionGroup tag="div" :css="false" @enter="onEnterLine">
+  <div ref="terminalEl" class="term-prompt" @click="focusInput">
+    <TransitionGroup tag="div" class="term-prompt__history" :css="false" @enter="onEnterLine">
       <div
         v-for="(entry, i) in history"
         :key="i"
@@ -233,8 +230,18 @@ function onEnterLine(el, done) {
   gap: var(--space-3xs);
   margin: 0 0 var(--space-lg);
   cursor: text;
+  max-height: min(20rem, 40dvh);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
 }
 
+.term-prompt__history,
+.term-prompt__line--live {
+  flex-shrink: 0;
+}
+
+.term-prompt__line--input,
 .term-prompt__line--output {
   overflow-wrap: anywhere;
   white-space: pre-wrap;

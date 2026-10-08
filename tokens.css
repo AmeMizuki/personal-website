@@ -1,5 +1,5 @@
-/* Hallmark · route: custom (bespoke) · structure: terminal session shell (fixed full-viewport ASCII-eye canvas + command-line nav + per-route content pane)
- * idea: "the site is a terminal you are logged into, watched by a living ASCII eye that tracks your cursor and blinks on its own clock"
+/* Hallmark · route: custom (bespoke) · structure: terminal session shell (fixed full-viewport ASCII pre + command-line nav + per-route content pane)
+ * idea: "the site is a terminal you are logged into, with a flowing ASCII field that brightens under the cursor and ripples on click"
  * paper: oklch(97% 0.006 240) [light] / oklch(14% 0.006 240) [dark] · accent: oklch(10% 0.010 240) [light] / oklch(97% 0.012 240) [dark]
  * display: JetBrains Mono · body: JetBrains Mono (single-family — terminal aesthetic IS the design; typography.md line 7 exception)
  * axes: dark / mono / neutral · gates: all-pass · studied: no · context: explicit · v0.9.x
