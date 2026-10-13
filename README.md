@@ -26,7 +26,10 @@
 
 ## 開發
 
+使用 Node.js 24，首次開發先安裝鎖定版本的依賴：
+
 ```sh
+npm ci
 npm run dev
 npm run build
 npm run preview
