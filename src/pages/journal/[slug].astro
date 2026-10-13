@@ -5,6 +5,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumb from '@/components/Breadcrumb.astro'
 import { profile } from '@/data/profile'
 import { t } from '@/i18n/utils'
+import { sitePath } from '@/lib/site-path'
 
 export async function getStaticPaths() {
   const entries = (await getCollection('journal')).sort((a, b) => b.data.date - a.data.date)
@@ -83,20 +84,20 @@ const readingMinutes = Math.max(1, Math.round(strippedBody.length / CHARS_PER_MI
 
       <nav class="entry__pager" aria-label={t('journal.pagerNav')} data-i18n="journal.pagerNav" data-i18n-attr="aria-label">
         {older ? (
-          <a href={`/journal/${older.id}`} class="entry__pager-link entry__pager-link--older">
+          <a href={sitePath(`/journal/${older.id}`)} class="entry__pager-link entry__pager-link--older">
             <span class="entry__pager-label"><ArrowLeft size={14} aria-hidden="true" /><span data-i18n="journal.pagerOlder">{t('journal.pagerOlder')}</span></span>
             <span class="entry__pager-title">{older.data.title}</span>
           </a>
         ) : <span />}
         {newer ? (
-          <a href={`/journal/${newer.id}`} class="entry__pager-link entry__pager-link--newer">
+          <a href={sitePath(`/journal/${newer.id}`)} class="entry__pager-link entry__pager-link--newer">
             <span class="entry__pager-label"><span data-i18n="journal.pagerNewer">{t('journal.pagerNewer')}</span><ArrowRight size={14} aria-hidden="true" /></span>
             <span class="entry__pager-title">{newer.data.title}</span>
           </a>
         ) : <span />}
       </nav>
 
-      <a href="/journal" class="entry__back"><ArrowLeft size={16} aria-hidden="true" /> cd ..</a>
+      <a href={sitePath('/journal')} class="entry__back"><ArrowLeft size={16} aria-hidden="true" /> cd ..</a>
     </div>
   </div>
   <template id="entry-copy-icons">

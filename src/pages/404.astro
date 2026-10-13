@@ -2,6 +2,7 @@
 import { ArrowLeft } from '@lucide/vue'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import { profile } from '@/data/profile'
+import { sitePath } from '@/lib/site-path'
 ---
 
 <BaseLayout title="找不到頁面" description="這個頁面不存在，請返回首頁瀏覽日誌、專案與短記。" noindex>
@@ -13,7 +14,7 @@ import { profile } from '@/data/profile'
       <p class="not-found__error reveal" style="--i: 1">
         bash: cd: {Astro.url.pathname}: No such file or directory
       </p>
-      <a href="/" class="not-found__back reveal" style="--i: 2"><ArrowLeft size={16} aria-hidden="true" /> cd ~</a>
+      <a href={sitePath('/')} class="not-found__back reveal" style="--i: 2"><ArrowLeft size={16} aria-hidden="true" /> cd ~</a>
     </div>
   </div>
 </BaseLayout>

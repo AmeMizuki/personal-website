@@ -4,6 +4,7 @@ import { gsap } from 'gsap'
 import { profile } from '@/data/profile'
 import { useI18n } from '@/composables/i18nStore'
 import { commandLog, initCommandLog, recordCommand } from '@/composables/terminalStore'
+import { sitePath } from '@/lib/site-path'
 
 const { t } = useI18n()
 
@@ -52,7 +53,7 @@ function pushOutput(lines) {
 
 function navigate(path) {
   const a = document.createElement('a')
-  a.href = path
+  a.href = sitePath(path)
   document.body.appendChild(a)
   a.click()
   a.remove()

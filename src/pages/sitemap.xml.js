@@ -1,10 +1,11 @@
 import { getCollection } from 'astro:content'
+import { sitePath } from '@/lib/site-path'
 
 export async function GET({ site }) {
   const entries = await getCollection('journal')
   const paths = ['/', '/about/', '/journal/', '/projects/', '/notes/', ...entries.map((entry) => `/journal/${entry.id}/`)]
   const urls = paths.map((path) => {
-    const location = new URL(path, site).href.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    const location = new URL(sitePath(path), site).href.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     return `<url><loc>${location}</loc></url>`
   }).join('')
 

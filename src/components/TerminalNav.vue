@@ -6,6 +6,7 @@ import MusicPlayerSkin from '@/components/MusicPlayerSkin.vue'
 import { initPlayer } from '@/composables/musicPlayerStore'
 import { useI18n } from '@/composables/i18nStore'
 import { currentPath as pagePath } from '@/composables/pageStore'
+import { sitePath } from '@/lib/site-path'
 
 const { locale, t, toggleLocale } = useI18n()
 
@@ -31,15 +32,16 @@ const links = [
 const promptText = computed(() => `${profile.handle}@${profile.hostname}:~$`)
 
 function isActive(to) {
-  if (to === '/') return currentPath.value === '/'
-  return currentPath.value.startsWith(to)
+  const path = currentPath.value.replace(/\/$/, '')
+  const target = sitePath(to).replace(/\/$/, '')
+  return path === target || (to !== '/' && path.startsWith(`${target}/`))
 }
 </script>
 
 <template>
   <nav class="term-nav">
     <div class="term-nav__inner">
-      <a href="/" class="term-nav__prompt">
+      <a :href="sitePath('/')" class="term-nav__prompt">
         <DecryptedText
           :text="promptText"
           animate-on="hover"
@@ -53,7 +55,7 @@ function isActive(to) {
 
       <ul class="term-nav__links">
         <li v-for="link in links" :key="link.to">
-          <a :href="link.to" class="term-nav__link" :class="{ 'is-active': isActive(link.to) }" :aria-current="isActive(link.to) ? 'page' : undefined">
+          <a :href="sitePath(link.to)" class="term-nav__link" :class="{ 'is-active': isActive(link.to) }" :aria-current="isActive(link.to) ? 'page' : undefined">
             <span class="term-nav__link-verb">cd </span>{{ link.cmd }}
           </a>
         </li>

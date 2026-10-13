@@ -7,6 +7,7 @@ import TerminalPrompt from '@/components/TerminalPrompt.vue'
 import MusicPlayerSkin from '@/components/MusicPlayerSkin.vue'
 import { Button } from '@/components/ui/button'
 import { profile } from '@/data/profile'
+import { sitePath } from '@/lib/site-path'
 
 const bootLines = [
   `booting ${profile.hostname}...`,
@@ -50,10 +51,10 @@ const latest = (await getCollection('journal')).sort((a, b) => b.data.date - a.d
 
         <div class="home-hero__actions reveal" style={`--i: ${bootLines.length + 1}`}>
           <Button as-child variant="outline">
-            <a href="/about">cat about.txt</a>
+            <a href={sitePath('/about')}>cat about.txt</a>
           </Button>
           <Button as-child variant="ghost">
-            <a href="/journal">ls ~/journal</a>
+            <a href={sitePath('/journal')}>ls ~/journal</a>
           </Button>
         </div>
       </div>
@@ -75,7 +76,7 @@ const latest = (await getCollection('journal')).sort((a, b) => b.data.date - a.d
         {
           latest.map((entry) => (
             <li class="home-latest__item">
-              <a href={`/journal/${entry.id}`} class="home-latest__link">
+              <a href={sitePath(`/journal/${entry.id}`)} class="home-latest__link">
                 <span class="home-latest__date">{entry.data.date.toISOString().slice(0, 10)}</span>
                 <span class="home-latest__title">{entry.data.title}</span>
                 <span class="home-latest__arrow"><ArrowRight size={16} aria-hidden="true" /></span>

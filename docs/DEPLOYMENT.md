@@ -1,8 +1,8 @@
 # Deployment checklist
 
-This site isn't deployed yet. This doc is the "when you're ready" reference —
-what to decide, what to fill in, and what to run, in order. Nothing here
-needs to happen until you actually pick a domain and a host.
+The repository includes GitHub Actions workflows for build validation and
+GitHub Pages deployment. Pages must be configured to use **GitHub Actions**
+as its source; the deployment workflow publishes Astro's `dist/`, not Jekyll.
 
 ## 1. Content — fill in the placeholders
 
@@ -21,6 +21,41 @@ pick, you'll end up with either a platform subdomain (e.g.
 `your-project.vercel.app`) or a custom domain you own — either works as the
 "real domain" the next step needs.
 
+### GitHub Pages
+
+1. Open **Settings → Pages → Build and deployment** and set **Source** to
+   **GitHub Actions**, not **Deploy from a branch**. Logs containing
+   `github-pages`, `jekyll`, or `jekyll-theme-primer` belong to the legacy
+   Jekyll build, not this site's Astro build.
+2. Push these changes to `main`, or run **Deploy to GitHub Pages** from the
+   Actions tab on `main`. Other branches and pull requests do not deploy.
+3. Wait for both `build` and `deploy` to succeed. The `github-pages`
+   environment exposes the published URL.
+
+`.github/workflows/deploy.yml` installs the lockfile with Node.js 24,
+builds Astro, checks generated URLs, uploads `dist/` as a Pages artifact,
+and deploys it with GitHub's Pages action. No PAT or deployment secret is
+needed. `.github/workflows/ci.yml` remains build-only.
+
+The deploy workflow reads the origin and base path from `configure-pages`.
+For the default project site these are `https://amemizuki.github.io` and
+`/personal-website`. A custom domain configured in Pages uses that domain
+and its root path instead; no repository-name prefix needs to be hard-coded.
+The Pages deployment does not use the CI-only repository variable `SITE_URL`.
+
+To check the project-site output locally in PowerShell:
+
+```powershell
+$env:SITE_URL = 'https://amemizuki.github.io'
+$env:SITE_BASE = '/personal-website'
+npm run build
+node scripts/check-pages-build.mjs
+npm run preview
+```
+
+Visit `/personal-website/` on the preview server. Unset `SITE_BASE` (or set
+it to `/`) when building for a host that serves this site at its root.
+
 ## 3. Configure the production origin and SEO
 
 Set **`SITE_URL`** in your host's build environment to the actual public
@@ -35,11 +70,12 @@ $env:SITE_URL = 'https://your-actual-domain'
 npm run build
 ```
 
-`astro.config.mjs` reads this environment variable into `site`. The existing
-`https://example.com` fallback remains for local development only; **setting
-the real domain is a prerequisite for production deployment**. Do not publish
-canonical URLs, sitemap links, or the RSS feed with that fallback.
-This is a build-time setting, not a browser setting: rebuild after changing it.
+`astro.config.mjs` reads this environment variable into `site` and optional
+`SITE_BASE` into `base` (default `/`). Internal navigation, public assets,
+RSS, and sitemap URLs include the configured base path. The existing
+`https://example.com` fallback remains for local development and build-only
+CI; production deployment must use the real origin. The Pages workflow
+supplies both values automatically. Rebuild after changing either value.
 
 SEO is implemented in `src/components/SeoHead.astro`, used by the shared
 layout. Pages supply descriptive titles and descriptions; journal articles

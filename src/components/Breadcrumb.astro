@@ -1,4 +1,6 @@
 ---
+import { sitePath } from '@/lib/site-path'
+
 interface Props {
   items: { label: string; href?: string }[]
 }
@@ -12,7 +14,7 @@ const { items } = Astro.props as Props
       <>
         {i > 0 && <span class="breadcrumb__sep">/</span>}
         {item.href ? (
-          <a href={item.href} class="breadcrumb__link">
+          <a href={sitePath(item.href)} class="breadcrumb__link">
             {item.label}
           </a>
         ) : (
