@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { createMarkdownProcessor } from '@astrojs/markdown-remark'
 import { parseFragment } from 'parse5'
 import remarkMedia from '../src/lib/remark-media.mjs'
+import { getProjectImages } from '../src/lib/project-images.mjs'
 
 const processor = await createMarkdownProcessor({ remarkPlugins: [remarkMedia] })
 const render = markdown => processor.render(markdown, { fileURL: new URL('../src/content/journal/check.md', import.meta.url) })
@@ -41,4 +42,12 @@ assert.equal(attributes(element(ordinary, 'img')).src, '/media/photo.jpg', 'Stat
 await assert.rejects(render('![clip](./demo.mp4)'), /put the file in public/, 'Unserved content-relative videos must produce an actionable error')
 const { metadata } = await render('![animation](./demo.gif)')
 assert.deepEqual(metadata.localImagePaths, ['./demo.gif'], 'Existing content-relative GIF assets must remain supported')
+const { code: galleryHtml } = await render('![首圖](https://picsum.photos/200)\n\n![縮圖][photo]\n\n[photo]: /images/detail.png\n\n![影片](/media/demo.mp4)\n\n`![非圖片](/images/code.png)`')
+assert.deepEqual(getProjectImages({
+  data: { images: [{ src: 'https://picsum.photos/200', alt: 'frontmatter 首圖' }] },
+  rendered: { html: galleryHtml },
+}), [
+  { src: 'https://picsum.photos/200', alt: 'frontmatter 首圖' },
+  { src: '/images/detail.png', alt: '縮圖' },
+], 'Project galleries combine frontmatter and Markdown images in order, deduplicate, and exclude videos and code')
 console.log('Media check passed: animations, video formats, references, escaping, and existing Markdown behavior')

@@ -1,4 +1,6 @@
 ---
+import { MessageCircle, Mail } from '@lucide/vue'
+import { sitePath } from '@/lib/site-path'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import { profile } from '@/data/profile'
 import { Badge } from '@/components/ui/badge'
@@ -45,13 +47,22 @@ import { Separator } from '@/components/ui/separator'
         <h2 class="about__heading"># links</h2>
         <ul class="about__links">
           {
-            profile.links.map((link) => (
-              <li>
-                <a href={link.href} class="about__link" target="_blank" rel="noopener">
-                  {link.label}
-                </a>
-              </li>
-            ))
+            profile.links.map((link) => {
+              const Icon = { 'message-circle': MessageCircle, mail: Mail }[link.icon]
+              return (
+                <li>
+                  <a href={link.href} class="about__link" target="_blank" rel="noopener">
+                    {link.icon === 'github' ? (
+                      <svg width="16" height="16" aria-hidden="true" viewBox="0 0 19 19"><use href={`${sitePath('/icons.svg')}#github-icon`} /></svg>
+                    ) : (
+                      <Icon size={16} aria-hidden="true" />
+                    )}
+                    <span>{link.label}</span>
+                  </a>
+                </li>
+              )
+            })
+
           }
         </ul>
       </section>
@@ -121,6 +132,10 @@ import { Separator } from '@/components/ui/separator'
   }
 
   .about__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+
     font-family: var(--font-mono);
     font-size: var(--text-sm);
     color: var(--color-ink);

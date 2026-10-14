@@ -105,10 +105,6 @@ const currentPath = Astro.url.pathname
 </script>
 
 <script>
-  // Applies the stored locale to server-rendered static text on every page —
-  // Vue-island chrome (nav/footer/terminal/player) reacts on its own via the
-  // shared composable (src/composables/i18nStore.js); this covers the plain
-  // Astro-rendered strings marked with data-i18n in each page.
   import { t, getLocale } from '@/i18n/utils'
 
   function applyTranslations() {

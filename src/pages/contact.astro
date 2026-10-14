@@ -1,0 +1,394 @@
+---
+import { Send, X } from '@lucide/vue'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import { profile } from '@/data/profile'
+
+const mailLink = profile.links.find((link) => link.label === 'email').href
+const recipient = mailLink.slice('mailto:'.length)
+const categories = [
+  ['project', '專案協同開發'],
+  ['app', 'App 研發'],
+  ['writing', '稿件需求'],
+  ['sharing', '技術交流和分享'],
+  ['job', '正職兼職面試邀約'],
+  ['other', '其他'],
+]
+---
+
+<BaseLayout title="連絡我" description="專案合作、App 研發、稿件需求與技術交流，歡迎透過表單連絡我。">
+  <div class="contact">
+    <div class="contact__pane term-pane">
+      <header class="contact__header reveal" style="--i: 0">
+        <p class="contact__prompt">{profile.handle}@{profile.hostname}:~$ mail contact</p>
+        <h1 id="contact-title" data-i18n="contact.title">連絡我</h1>
+        <p class="contact__intro" data-i18n="contact.intro">分享你的想法與需求。除了電話外，所有欄位都必須填寫。</p>
+      </header>
+
+      <form action={`https://formsubmit.co/${recipient}`} method="POST" data-astro-reload aria-labelledby="contact-title" class="reveal" style="--i: 1">
+        <input type="hidden" name="_subject" value="個人網站｜連絡我的新需求" />
+        <input type="hidden" name="_template" value="table" />
+
+        <div class="contact__row">
+          <div class="contact__field">
+            <label for="contact-name" data-i18n="contact.name">姓名（必填）</label>
+            <input id="contact-name" type="text" name="姓名" autocomplete="name" required pattern={'.*\\S.*'} maxlength="100" />
+          </div>
+          <div class="contact__field">
+            <label for="contact-email" data-i18n="contact.email">電子信箱（必填）</label>
+            <input id="contact-email" type="email" name="email" autocomplete="email" placeholder="name@example.com" required maxlength="254" />
+          </div>
+        </div>
+
+        <div class="contact__row">
+          <div class="contact__field">
+            <label for="contact-phone" data-i18n="contact.phone">電話（選填）</label>
+            <input id="contact-phone" type="tel" name="電話" autocomplete="tel" maxlength="50" />
+          </div>
+          <div class="contact__field">
+            <label for="contact-category" data-i18n="contact.category">需求性質（必填）</label>
+            <select id="contact-category" name="需求性質" required>
+              <option value="" disabled selected data-i18n="contact.choose">請選擇需求性質</option>
+              {categories.map(([key, value]) => <option value={value} data-i18n={`contact.${key}`}>{value}</option>)}
+            </select>
+          </div>
+        </div>
+
+        <div class="contact__field">
+          <label for="contact-message" data-i18n="contact.message">需求內容（必填）</label>
+          <textarea id="contact-message" name="需求內容" rows="7" required maxlength="10000"></textarea>
+        </div>
+
+        <div class="contact__consent">
+          <input id="contact-consent" type="checkbox" name="隱私權政策同意" value="已閱讀並同意" required />
+          <p>
+            <label for="contact-consent" data-i18n="contact.consent">我已閱讀並同意</label>
+            <button type="button" class="contact__policy" data-open-privacy data-i18n="contact.policy">隱私權政策</button>
+          </p>
+        </div>
+
+        <button type="submit" class="contact__submit">
+          <Send size={16} aria-hidden="true" />
+          <span data-i18n="contact.submit">送出郵件</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <dialog id="privacy-dialog" class="privacy" aria-labelledby="privacy-title">
+    <div class="privacy__header">
+      <h2 id="privacy-title" data-i18n="contact.policy">隱私權政策</h2>
+      <button type="button" class="privacy__close" data-close-privacy aria-label="關閉" data-i18n="contact.close" data-i18n-attr="aria-label">
+        <X size={18} aria-hidden="true" />
+      </button>
+    </div>
+    <div class="privacy__body privacy__body--zh" lang="zh-Hant">
+      <p>本表單蒐集你的姓名、電子信箱、需求性質、需求內容，以及自行提供的電話，供 {profile.name} 回覆詢問與討論合作使用。請勿提供密碼、付款資料或其他非必要的敏感資訊。</p>
+      <p>送出時，表單資料會交由第三方服務 <a href="https://formsubmit.co/" target="_blank" rel="noopener noreferrer">FormSubmit</a> 處理，並以郵件寄至我的信箱。服務包含防垃圾郵件驗證；第三方資料處理方式請參閱 <a href="https://formsubmit.co/privacy.pdf" target="_blank" rel="noopener noreferrer">FormSubmit 隱私權政策</a>。</p>
+      <p>提供的資料不作為行銷用途。若要詢問、更正或要求刪除我收到的資料，請寄信至 <a href={mailLink}>{recipient}</a>。未同意本政策則無法使用此表單。</p>
+    </div>
+    <div class="privacy__body privacy__body--en" lang="en">
+      <p>This form collects your name, email, inquiry type, inquiry details and, if you choose to provide it, your phone number. {profile.name} uses them only to reply to your inquiry and discuss collaboration. Do not submit passwords, payment details or other unnecessary sensitive information.</p>
+      <p>When you submit, the form data is handled by the third-party service <a href="https://formsubmit.co/" target="_blank" rel="noopener noreferrer">FormSubmit</a> and emailed to my inbox. The service includes spam verification. For how FormSubmit handles data, read the <a href="https://formsubmit.co/privacy.pdf" target="_blank" rel="noopener noreferrer">FormSubmit privacy policy</a>.</p>
+      <p>Your data is not used for marketing. To ask about, correct or request deletion of the data I received, email <a href={mailLink}>{recipient}</a>. You cannot use this form without agreeing to this policy.</p>
+    </div>
+  </dialog>
+</BaseLayout>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const dialog = document.querySelector<HTMLDialogElement>('#privacy-dialog')
+    if (!dialog) return
+    document.querySelector('[data-open-privacy]')?.addEventListener('click', () => dialog.showModal())
+    // The dialog has no padding, so a click on the dialog itself is a click on the backdrop.
+    dialog.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement
+      if (target === dialog || target.closest('[data-close-privacy]')) dialog.close()
+    })
+  })
+</script>
+
+<style>
+  .contact {
+    padding: clamp(var(--space-lg), 5vw, var(--space-2xl)) clamp(var(--space-md), 4vw, var(--space-xl));
+    display: flex;
+    justify-content: center;
+  }
+
+  .contact__pane {
+    width: 100%;
+    max-width: 44rem;
+    padding: clamp(var(--space-md), 4vw, var(--space-xl));
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .contact__header {
+    display: grid;
+    gap: var(--space-sm);
+    padding-block-end: var(--space-lg);
+    border-block-end: 1px solid var(--color-rule);
+  }
+
+  .contact__prompt {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+    overflow-wrap: anywhere;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: var(--text-xl);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .contact__intro {
+    margin: 0;
+    color: var(--color-ink-2);
+    line-height: 1.65;
+    max-width: 60ch;
+  }
+
+  form {
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  /* Two columns while each field keeps 14rem, one column otherwise. */
+  .contact__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: var(--space-lg);
+  }
+
+  .contact__field {
+    display: grid;
+    gap: var(--space-xs);
+    min-width: 0;
+    align-content: start;
+  }
+
+  label {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--color-ink-2);
+  }
+
+  input:not([type='checkbox']),
+  select,
+  textarea {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius);
+    padding: var(--space-sm) var(--space-md);
+    font: inherit;
+    font-size: var(--text-base);
+    transition: border-color var(--dur-short) var(--ease-out);
+  }
+
+  input::placeholder {
+    color: var(--color-muted);
+  }
+
+  textarea {
+    resize: vertical;
+    line-height: 1.65;
+  }
+
+  @media (hover: hover) {
+    input:not([type='checkbox']):hover,
+    select:hover,
+    textarea:hover {
+      border-color: var(--color-ink-2);
+    }
+  }
+
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  button:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+
+  input:not([type='checkbox']):focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    border-color: var(--color-focus);
+  }
+
+  .contact__consent {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius);
+    background: var(--color-paper);
+  }
+
+  .contact__consent p {
+    margin: 0;
+    line-height: 1.65;
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--space-2xs);
+    align-items: baseline;
+  }
+
+  .contact__consent label {
+    font-size: var(--text-base);
+    font-weight: 400;
+    color: var(--color-ink);
+    cursor: pointer;
+  }
+
+  input[type='checkbox'] {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    accent-color: var(--color-accent);
+    cursor: pointer;
+  }
+
+  .contact__policy {
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--color-ink);
+    font: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  .contact__submit {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    min-width: 10rem;
+    min-height: 44px;
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--color-accent);
+    color: var(--color-accent-ink);
+    border-radius: var(--radius);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform var(--dur-micro) var(--ease-out);
+  }
+
+  .contact__submit:active {
+    transform: scale(0.97);
+  }
+
+  @media (max-width: 30rem) {
+    .contact__submit {
+      justify-self: stretch;
+    }
+  }
+
+  /* Privacy dialog */
+  .privacy {
+    margin: auto;
+    padding: 0;
+    width: min(36rem, calc(100% - 2rem));
+    max-height: min(85dvh, 40rem);
+    flex-direction: column;
+    background: var(--color-paper-2);
+    color: var(--color-ink);
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius);
+    box-shadow: 0 1.5rem 4rem oklch(0% 0 0 / 0.5);
+  }
+
+  .privacy[open] {
+    display: flex;
+    animation: privacy-in var(--dur-short) var(--ease-out);
+  }
+
+  .privacy::backdrop {
+    background: oklch(0% 0 0 / 0.6);
+    backdrop-filter: blur(3px);
+  }
+
+  .privacy__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    border-block-end: 1px solid var(--color-rule);
+  }
+
+  .privacy__header h2 {
+    margin: 0;
+    font-size: var(--text-md);
+    font-weight: 700;
+  }
+
+  .privacy__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-inline-end: calc(var(--space-xs) * -1);
+    background: none;
+    border-radius: var(--radius);
+    color: var(--color-ink-2);
+    cursor: pointer;
+  }
+
+  @media (hover: hover) {
+    .privacy__close:hover {
+      background: var(--color-paper-3);
+      color: var(--color-ink);
+    }
+  }
+
+  .privacy__body {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--space-lg);
+    display: grid;
+    gap: var(--space-md);
+    line-height: 1.75;
+  }
+
+  .privacy__body p {
+    margin: 0;
+  }
+
+  .privacy__body a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+  }
+
+  /* Show only the policy matching the site language (BaseLayout sets html[lang]). */
+  :global(html[lang='en']) .privacy__body--zh,
+  :global(html:not([lang='en'])) .privacy__body--en {
+    display: none;
+  }
+
+  :global(html:has(#privacy-dialog[open])) {
+    overflow: hidden;
+  }
+
+  @keyframes privacy-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+</style>

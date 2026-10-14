@@ -6,8 +6,16 @@ import Breadcrumb from '@/components/Breadcrumb.astro'
 import { Badge } from '@/components/ui/badge'
 import { profile } from '@/data/profile'
 import { t } from '@/i18n/utils'
+import ProjectGallery from '@/components/ProjectGallery.vue'
+import { getLinkPreview } from '@/lib/link-preview.mjs'
+import { sitePath } from '@/lib/site-path'
+import { getProjectImages } from '@/lib/project-images.mjs'
 
 const projects = (await getCollection('projects')).sort((a, b) => b.data.date - a.data.date)
+const previews = await Promise.all(projects.map(project =>
+  Promise.all([...new Set([project.data.link, project.data.repo].filter(Boolean))].map(url => getLinkPreview(url)))
+))
+const galleries = projects.map(getProjectImages)
 ---
 
 <BaseLayout title="專案" description={`${profile.name} 的開發專案，包含專案介紹、使用技術與公開的程式碼或展示連結。`}>
@@ -28,6 +36,16 @@ const projects = (await getCollection('projects')).sort((a, b) => b.data.date - 
                 <span class="projects__date">{project.data.date.toISOString().slice(0, 10)}</span>
               </div>
               <p class="projects__description">{project.data.description}</p>
+              {galleries[i].length > 0 && (
+                <ProjectGallery
+                  client:load
+                  title={project.data.title}
+                  images={galleries[i].map(image => ({
+                    ...image,
+                    src: image.src.startsWith('/') ? sitePath(image.src) : image.src,
+                  }))}
+                />
+              )}
               {project.data.stack.length > 0 && (
                 <div class="projects__stack">
                   {project.data.stack.map((tech) => (
@@ -38,16 +56,16 @@ const projects = (await getCollection('projects')).sort((a, b) => b.data.date - 
                 </div>
               )}
               <div class="projects__links">
-                {project.data.link && (
-                  <a href={project.data.link} class="projects__link" target="_blank" rel="noopener">
-                    demo <ArrowUpRight size={16} aria-hidden="true" />
+                {previews[i].map(preview => (
+                  <a href={preview.url} class="projects__embed" target="_blank" rel="noopener noreferrer">
+                    <span class="projects__embed-body">
+                      <span class="projects__embed-host">{preview.hostname} <ArrowUpRight size={14} aria-hidden="true" /></span>
+                      <strong class="projects__embed-title">{preview.title || project.data.title}</strong>
+                      <span class="projects__embed-description">{preview.description || project.data.description}</span>
+                    </span>
+                    {preview.image && <img class="projects__embed-image" src={preview.image} alt="" loading="lazy" decoding="async" />}
                   </a>
-                )}
-                {project.data.repo && (
-                  <a href={project.data.repo} class="projects__link" target="_blank" rel="noopener">
-                    repo <ArrowUpRight size={16} aria-hidden="true" />
-                  </a>
-                )}
+                ))}
               </div>
             </li>
           ))
@@ -147,29 +165,86 @@ const projects = (await getCollection('projects')).sort((a, b) => b.data.date - 
   }
 
   .projects__links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-md);
+    display: grid;
+    gap: var(--space-sm);
   }
 
-  .projects__link {
-    display: inline-flex;
+  .projects__embed {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-sm);
+    border-inline-start: 3px solid var(--color-ink-2);
+    border-radius: var(--radius);
+    background: var(--color-paper-3);
+    color: var(--color-ink);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+
+  .projects__embed-body {
+    min-width: 0;
+    flex: 1;
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .projects__embed-host {
+    display: flex;
     align-items: center;
     gap: var(--space-xs);
-    font-family: var(--font-mono);
     font-size: var(--text-sm);
-    color: var(--color-ink);
-    text-decoration: underline;
-    text-decoration-color: var(--color-rule);
-    text-underline-offset: 3px;
-    transition:
-      color var(--dur-short) var(--ease-out),
-      text-decoration-color var(--dur-short) var(--ease-out);
+    color: var(--color-ink-2);
   }
 
-  .projects__link:hover {
-    color: var(--color-accent);
-    text-decoration-color: currentColor;
+  .projects__embed-title {
+    font-size: var(--text-base);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .projects__embed-description {
+    font-size: var(--text-sm);
+    line-height: 1.6;
+  }
+
+  .projects__embed-image {
+    width: 5rem;
+    height: 5rem;
+    object-fit: cover;
+    flex-shrink: 0;
+    border-radius: var(--radius);
+  }
+
+  .projects__embed:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+
+  @media (hover: hover) {
+    .projects__embed:hover .projects__embed-title {
+      text-decoration-thickness: 2px;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .projects__item {
+      padding: var(--space-sm);
+    }
+
+    .projects__embed {
+      flex-wrap: wrap;
+    }
+
+    .projects__embed-body {
+      flex-basis: 100%;
+    }
+
+    .projects__embed-image {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+    }
   }
 
   .projects__empty {

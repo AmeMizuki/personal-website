@@ -21,7 +21,7 @@ const { Content, headings } = await render(entry)
 const toc = headings.filter((h) => h.depth <= 3)
 
 const CHARS_PER_MINUTE = 400 // rough reading speed for CJK prose
-const strippedBody = entry.body.replace(/```[\s\S]*?```/g, '').replace(/[#*_>`[\]()-]/g, '')
+const strippedBody = (entry.body ?? '').replace(/```[\s\S]*?```/g, '').replace(/[#*_>`[\]()-]/g, '')
 const readingMinutes = Math.max(1, Math.round(strippedBody.length / CHARS_PER_MINUTE))
 ---
 

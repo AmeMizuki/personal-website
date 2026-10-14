@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content'
-import { ArrowRight } from '@lucide/vue'
+import { ArrowRight, Rss } from '@lucide/vue'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Breadcrumb from '@/components/Breadcrumb.astro'
 import { profile } from '@/data/profile'
@@ -16,10 +16,15 @@ const categories = [...new Set(entries.map((entry) => entry.data.category))]
     <div class="journal__pane term-pane">
       <Breadcrumb items={[{ label: '~', href: '/' }, { label: 'journal' }]} />
 
-      <p class="journal__prompt reveal" style="--i: 0">
-        {profile.handle}@{profile.hostname}:~$ ls -la ~/journal
-        <a href={sitePath('/rss.xml')} class="journal__rss">rss</a>
-      </p>
+      <div class="journal__header">
+        <p class="journal__prompt reveal" style="--i: 0">
+          {profile.handle}@{profile.hostname}:~$ ls -la ~/journal
+        </p>
+        <a href={sitePath('/rss.xml')} class="journal__rss" data-astro-reload>
+          <Rss size={14} aria-hidden="true" />
+          <span data-i18n="journal.rssOpen">{t('journal.rssOpen')}</span>
+        </a>
+      </div>
 
       <div class="journal__controls reveal" style="--i: 1">
         <input
@@ -135,18 +140,47 @@ const categories = [...new Set(entries.map((entry) => entry.data.category))]
     margin: 0 0 var(--space-lg);
   }
 
-  .journal__rss {
-    margin-inline-start: var(--space-sm);
-    color: var(--color-muted);
-    text-decoration: underline;
-    text-decoration-color: var(--color-rule);
-    text-underline-offset: 3px;
-    transition: color var(--dur-short) var(--ease-out);
+  .journal__header {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-md);
+    margin-block-end: var(--space-md);
   }
 
-  .journal__rss:hover {
-    color: var(--color-accent);
+  .journal__header .journal__prompt {
+    flex: 1;
+    margin: 0;
   }
+
+  .journal__rss {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    min-height: 32px;
+    padding-inline: var(--space-xs);
+    color: var(--color-ink);
+    background: var(--color-paper-3);
+    border-radius: var(--radius);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 150ms ease-out;
+  }
+
+  .journal__rss:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+
+  @media (hover: hover) {
+    .journal__rss:hover {
+      background: var(--color-paper-2);
+    }
+  }
+
 
   .journal__controls {
     display: flex;
